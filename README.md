@@ -47,7 +47,7 @@ npm run lint --fix		// 自动修复已知不规范代码
 .
 |-- README.md						# 项目说明文件
 |-- babel.config.js					# babel 配置文件
-|-- package-lock.json				# package.josn 绑定文件
+|-- package-lock.json					# package.josn 绑定文件
 |-- package.json					# 项目管理文件
 |-- postcss.config.js
 |-- vue.config.js					# webpack 配置文件
@@ -56,54 +56,54 @@ npm run lint --fix		// 自动修复已知不规范代码
 |   `-- index.html
 `-- src
     |-- App.vue						# 路由文件顶层路由
-    |-- api							# 后端交互相关方法和配置
-    |   |-- config.js				# 项目配置：生产、开发、测试接口配置 全局常量
-    |   |-- index.js				# sercice文件夹api统一出口
+    |-- api						# 后端交互相关方法和配置
+    |   |-- config.js					# 项目配置：生产、开发、测试接口配置 全局常量
+    |   |-- index.js					# sercice文件夹api统一出口
     |   `-- service					# 对应组件使用的api方法和数据处理
-    |       |-- modules				# 对应组件相关api
-    |		|	|-- index.js		# 导出所有模块的api
-    |		|	|-- common.js		# 公共模块api
-    |		|	|-- expert.js		# 专家模块api
-    |		|	|-- ordinary.js		# 普通用户模块api
-    |       `-- http.js				# 封装使用ajax方法，拦截器
+    |       |-- modules					# 对应组件相关api
+    |		|	|-- index.js			# 导出所有模块的api
+    |		|	|-- common.js			# 公共模块api
+    |		|	|-- expert.js			# 专家模块api
+    |		|	|-- ordinary.js			# 普通用户模块api
+    |       `-- http.js					# 封装使用ajax方法，拦截器
     |-- assets						# 静态文件目录
     |   |-- icon					# 字体图标目录
     |   |-- images					# 静态图片目录(背景图，logo)
     |   |-- logo.png
     |   |-- logo.svg
     |   `-- styles					# 自定义样式目录(由于使用框架，此目录少改动)
-    |       |--iconfont             #图标
+    |       |--iconfont             			#图标
     |       |--iconfont.css
     |       `-- base.css       
     |-- common						# 公有目录
-    |   |-- const.js				# 封装的js变量(不包括axios)
+    |   |-- const.js					# 封装的js变量(不包括axios)
     |   `-- untils					# 封装的工具函数
-    |		|-- cookieUntil.js		# cookie 操作工具函数
-    |		|-- untils.js			# 未定义扩展工具函数
+    |		|-- cookieUntil.js			# cookie 操作工具函数
+    |		|-- untils.js				# 未定义扩展工具函数
     |-- components					# 公共组件目录
     |   |-- HelloWorld.vue
     |   |-- common					# 封装的公共组件(非项目可以使用)
-    |	|	|-- Loading.vue			# loading 动画组件
-    |	|	|-- Snackbars.vue		# message 提示组件
+    |	|	|-- Loading.vue				# loading 动画组件
+    |	|	|-- Snackbars.vue			# message 提示组件
     |   `-- content					# 封装的公共组件(本项目使用)
-    |		|-- Header.vue			# 公共组件--appbar
-    |		|-- Footer.vue			# 公共组件--footer
+    |		|-- Header.vue				# 公共组件--appbar
+    |		|-- Footer.vue				# 公共组件--footer
     |-- main.js						# vue入口文件
     |-- plugins
-    |   `-- vuetify.js				# vuetify 基本配置文件
+    |   `-- vuetify.js					# vuetify 基本配置文件
     |-- router						# vue-router相关配置
-    |   |-- index.js				# 导出所有路由
-    |   `-- routes.js				# 所有路由
+    |   |-- index.js					# 导出所有路由
+    |   `-- routes.js					# 所有路由
     |-- store						# vuex相关配置
     |   |-- global					# 全局vuex
     |   |   |-- actions.js
-    |   |   |-- index.js			# 导出全局vuex配置
+    |   |   |-- index.js				# 导出全局vuex配置
     |   |   |-- mutations.js
     |   |   `-- state.js
     |   |-- index.js
     |   `-- modules					# 模块vuex
     |       |-- disease.js
-    |		|-- index.js			# 导出所有modules vuex配置
+    |		|-- index.js				# 导出所有modules vuex配置
     |       `-- pest.js
     `-- views						# 视图(路由)组件
         |-- home					# 主页面
@@ -111,7 +111,7 @@ npm run lint --fix		// 自动修复已知不规范代码
         |   `-- components
         |       |-- Mian.vue
         |       |-- Header.vue
-        |       |-- Search.vue      #搜索框
+        |       |-- Search.vue      			#搜索框
         |       `-- Slidebar.vue
         `-- login					# 登录页面
             |-- Login.vue
@@ -126,9 +126,9 @@ view 目录中更新不需要写文档
 ===============================================================================
 >> 第一次更新 + api目录 	新增 modules 目录 => 对应模块 API
 >> 第二次更新 ~ api目录 	修改 instance.js 文件名称为 http.js
->> 第三次更新 + 根目录	   新增 vue.config.js 文件 => webpack 配置文件
->> 第四次更新 ~ common目录 修改 untils.js 文件变更为 untils 文件夹
->> 第五次更新 + untils目录 新增 cookieUntil.js 文件 untils.js 文件
+>> 第三次更新 + 根目录	       新增 vue.config.js 文件 => webpack 配置文件
+>> 第四次更新 ~ common目录 	修改 untils.js 文件变更为 untils 文件夹
+>> 第五次更新 + untils目录 	新增 cookieUntil.js 文件 untils.js 文件
 >> 第六次更新 + components目录 新增 Loading.vue Snackbars.vue 两个组件
 >> 第七次更新 + components目录 新增 Header.vue Footer.vue 两个组件
 ```
