@@ -72,8 +72,6 @@ npm run lint --fix		// 自动修复已知不规范代码
     |   |-- logo.png
     |   |-- logo.svg
     |   `-- styles					# 自定义样式目录(由于使用框架，此目录少改动)
-    |       |--iconfont             			#图标
-    |       |--iconfont.css
     |       `-- base.css       
     |-- common						# 公有目录
     |   |-- const.js					# 封装的js变量(不包括axios)
