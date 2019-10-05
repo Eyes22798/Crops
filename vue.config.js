@@ -7,7 +7,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/': {
-        target: 'http://yapi.demo.qunar.com/mock/94110/farm', // 对应自己的接口
+        target: 'http://127.0.0.1:3000/mock/11/farm/', // 对应自己的接口
         changeOrigin: true,
         ws: false,
         pathRewrite: {

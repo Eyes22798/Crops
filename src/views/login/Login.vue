@@ -10,10 +10,10 @@
                   <img
                     :src="require('@/assets/images/logo.png')"
                     alt="Vue Material Admin"
-                    width="150"
-                    height="150"
+                    width="120"
+                    height="120"
                   />
-                  <h1 class="flex my-6 success--text">广学坚守，勤思敏行</h1>
+                  <h1 class="flex mt-n6 mb-6 success--text">广学坚守，勤思敏行</h1>
                 </div>
                 <v-form v-if="!toggleTag">
                   <v-text-field
@@ -22,12 +22,12 @@
                     name="username"
                     prepend-icon="person"
                     type="text"
-                    :rules="[() => !!username || '请输入你的手机号']"
+                    :rules="rules.username"
                     :clearable="clearable"
                     v-model="username"
+                    :hint="usernameHint"
                     counter="11"
                     maxlength="11"
-                    hint="请输入正确的手机号"
                     required
                   ></v-text-field>
                   <v-text-field
@@ -38,9 +38,9 @@
                     :append-icon="show ? 'visibility' : 'visibility_off'"
                     :type="show ? 'text' : 'password'"
                     :rules="[
-                    () => !!password || '请输入你的密码',
-                    addressCheck
-                  ]"
+                     () => !!password || '请输入你的密码',
+                     addressCheck
+                    ]"
                     :clearable="clearable"
                     v-model="password"
                     counter="25"
@@ -57,12 +57,11 @@
                     name="username"
                     prepend-icon="person"
                     type="text"
-                    :rules="[() => !!username || '请输入你的手机号']"
+                    :rules="rules.username"
                     :clearable="clearable"
                     v-model="username"
                     counter="11"
                     maxlength="11"
-                    hint="请输入正确的手机号"
                     required
                   ></v-text-field>
                   <v-row>
@@ -70,6 +69,7 @@
                       <v-text-field
                         id="code"
                         label="验证码"
+                        v-model="code"
                         name="code"
                         prepend-icon="vpn_key"
                         type="text"
@@ -82,7 +82,7 @@
                         :disabled="disabled"
                         color="info"
                         class="mt-3 px-10 white--text float-right"
-                        @click="loader = 'loading3'"
+                        @click="loader = 'loading3';getSendCode()"
                       >{{ loadingText }}</v-btn>
                     </v-col>
                   </v-row>
@@ -135,12 +135,17 @@
 
 <script>
 import Footer from '@/components/content/Footer.vue'
+import * as types from '@/store/global/mutation-types'
+import { phoneRex } from '@/common/const.js'
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'Login',
   data () {
     return {
       username: null,
       password: null,
+      code: null,
       toggleTag: true,
       source: null,
       show: false,
@@ -151,7 +156,27 @@ export default {
       loadingText: '验证码',
       loadingSecond: 60,
       disabled: false,
-      gradient: true
+      gradient: true,
+      usernameHint: '请输入您的手机号',
+      rules: {
+        username: [
+          val => {
+            val = !val ? '' : val
+            // let str = this.phone.test(val) ? true : '请输入正确的手机号'
+            if (phoneRex.test(val) && val.length === 11) {
+              this.usernameHint = '手机号正确'
+              return true
+            } else if (val.length === 11) {
+              return phoneRex.test(val) || '请输入正确的手机号'
+            } else if (val.length === 0) {
+              return '请输入手机号'
+            } else {
+              this.usernameHint = '请输入您的手机号'
+              return true
+            }
+          }
+        ]
+      }
     }
   },
   watch: {
@@ -161,7 +186,7 @@ export default {
       this[l] = !this[l]
       setTimeout(() => {
         this[l] = false
-        this.loadingText = `${this.loadingSecond}s`
+        this.loadingText = `重发(${this.loadingSecond}s)`
         this.flashText()
       }, 1000)
       this.loader = null
@@ -174,19 +199,89 @@ export default {
     this.toggle()
   },
   methods: {
+    ...mapMutations({
+      setUserInfoData: types.SET_USERINFO
+    }),
     login () {
+      // 打开 btn loading 动画
       this.loading4 = true
+      // 保存表单提交信息
+      const formData = {
+        username: this.username,
+        password: this.password,
+        code: this.code
+      }
+      console.log(formData)
+      if (formData.code === null) {
+        this.$api.common
+          .login({
+            username: this.username,
+            password: this.password
+          })
+          .then(res => {
+            if (res.code === 200) {
+              // 把用户的基本信息存储到 localStorage 中
+              this.setUserInfoData(res.data)
+              this.$toast('登录成功!', {
+                x: 'right',
+                y: 'top',
+                icon: 'info',
+                dismissable: false,
+                showClose: true
+              })
+              setTimeout(() => {
+                this.loading4 = false
+                this.$router.push('/')
+              }, 1000)
+            } else {
+              setTimeout(() => {
+                this.loading4 = false
+              }, 1000)
+            }
+          })
+      } else if (formData.password === null) {
+        this.$api.common
+          .loginCodeSend({
+            username: this.username,
+            code: this.code
+          })
+          .then(res => {
+            if (res.code === 200) {
+              this.$toast('登录成功!', {
+                x: 'right',
+                y: 'top',
+                icon: 'info',
+                dismissable: false,
+                showClose: true,
+                timeout: 800
+              })
+              setTimeout(() => {
+                this.loading4 = false
+                this.$router.push('/')
+              }, 1000)
+            } else {
+              setTimeout(() => {
+                this.loading4 = false
+              }, 1000)
+            }
+          })
+      }
+    },
+    getSendCode () {
       this.$api.common
-        .login({
-          username: this.username,
-          password: this.password
+        .loginSendCode({
+          phone: this.username
         })
         .then(res => {
-          console.log(res)
-          setTimeout(() => {
-            this.loading3 = false
-            this.$router.push('/')
-          }, 1000)
+          if (res.code === 200) {
+            this.$toast('短信已发送!', {
+              x: 'right',
+              y: 'top',
+              icon: 'info',
+              dismissable: false,
+              showClose: true
+            })
+          }
         })
     },
     toggle () {
@@ -204,7 +299,7 @@ export default {
     flashText () {
       let number = this.loadingSecond - 1
       let nIntervId = setInterval(() => {
-        this.loadingText = `${number--}s`
+        this.loadingText = `重发(${number--}s)`
         if (number < 0) {
           clearInterval(nIntervId)
           this.loadingText = '重新获得'

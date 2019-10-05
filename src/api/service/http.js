@@ -4,12 +4,15 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
 import config from '../config'
-import { getCookie } from '@/common/untils/cookieUntil'
+import {
+  getCookie
+} from '@/common/untils/cookieUntil'
 import globalStore from '@/store/global'
 import router from '@/router'
+import Vue from 'vue'
 
 // 拿到 Vue 原型上的 $toast 对象
-const $toast = globalStore.state.$toast
+const $toast = Vue.prototype.$toast
 
 const toLogin = () => {
   router.replace({
@@ -34,10 +37,10 @@ export default function $axios (options) {
         if (config.params) {
           NProgress.start()
         }
+        console.log(config)
         // 获取 cookie
         const token = globalStore.state.sessionID
-        // 判断是否是登录页
-        const loginMeta = config.url.toLocaleLowerCase().includes('login')
+        const loginMeta = config.url.toLocaleLowerCase().includes('common')
         // const token = getCookie('JSESSIONID')
         // bug-2
         console.log(`当前的token: ${token}`)
@@ -114,24 +117,59 @@ export default function $axios (options) {
     instance.interceptors.response.use(
       response => {
         let data
+        const responseError = new Error()
+        responseError.data = data
+        responseError.response = response
+        const errorHandle = (status, other) => {
+          // 状态码判断
+          switch (status) {
+            case 1000:
+              responseError.message = '用户名或者密码错误'
+              break
+            case 1001:
+              responseError.message = '该号码未绑定，请先注册'
+              break
+            case 1002:
+              responseError.message = '验证码错误'
+              break
+            case 1003:
+              responseError.message = '登录过期，请重新登录'
+              break
+            case 1004:
+              responseError.message = '该号码已被注册，请重新输入'
+              break
+            case 1005:
+              responseError.message = '请选择新的电话号码'
+              break
+            case 1006:
+              responseError.message = '未找到任何相关信息'
+              break
+            default:
+              console.log(other)
+          }
+        }
         // IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
         if (response.data === undefined) {
           data = response.request.responseText
         } else {
           data = response.data
         }
-        // 结束 Nprogress 结果
+        // 一切正常 结束 Nprogress
         NProgress.done()
         // 根据返回的code值来做不同的处理
-        const err = new Error(data.description)
-        switch (data.code) {
-          // 若不是正确的返回code，且已经登录，就抛出错误
-          case 500:
-            err.message = '未知错误'
-            err.data = data
-            err.response = response
-            throw err
-          default:
+        console.log(data)
+        errorHandle(data.code, response.data.message)
+        // 显示错误消息
+        let errMessage = !!responseError.message
+        if (errMessage) {
+          $toast(`错误消息: ${responseError.message}`, {
+            x: 'right',
+            y: 'top',
+            icon: 'info',
+            color: 'error',
+            dismissable: false,
+            showClose: true
+          })
         }
         return data
       },
@@ -186,9 +224,12 @@ export default function $axios (options) {
             default:
           }
         }
+        if (err.toString().includes('timeout')) {
+          err.message = '抱歉，服务器超时，请稍后再试！'
+        }
         console.error(`错误消息： ${err}`)
         // 显示错误消息
-        $toast(`错误消息: ${err.message}`, {
+        $toast(`错误: ${err.message}`, {
           x: 'right',
           y: 'top',
           icon: 'info',

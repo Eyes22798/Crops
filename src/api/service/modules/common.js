@@ -20,15 +20,15 @@ const common = {
     return $axios({
       url: '/common/login',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
-  // 验证码登录
+  // 获取验证码
   loginSendCode (params) {
     return $axios({
       url: '/common/login/sendcode',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 发送验证码登录
@@ -36,7 +36,7 @@ const common = {
     return $axios({
       url: '/common/code/login',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 获取 session 数据
@@ -51,7 +51,7 @@ const common = {
     return $axios({
       url: '/common/ordinary/regist',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 专家用户注册
@@ -59,7 +59,7 @@ const common = {
     return $axios({
       url: '/common/expert/regist',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 省市县三级联动
@@ -72,9 +72,9 @@ const common = {
   // 验证注册使用的电话
   registerSendCode (params) {
     return $axios({
-      url: '/common/register/sendcode',
+      url: '/common/regist/sendcode',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 个人信息修改
