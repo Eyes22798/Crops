@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-footer
-     :absolute="false"
+     :absolute="true"
     >
       <div class="flex-grow-1"></div>
       <span class="black--text">&copy; 2019</span>

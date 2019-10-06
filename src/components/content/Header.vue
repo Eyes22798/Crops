@@ -1,28 +1,53 @@
 <template>
   <div id="Header">
     <v-card>
-      <v-app-bar
-        :absolute="false"
-        dark
-        :color="color"
-        :elevate-on-scroll="elevateOnScroll"
-        :hide-on-scroll="hideOnScroll"
-        :fade-on-scroll="fadeOnScroll"
-        :fade-img-on-scroll="fadeImgOnScroll"
-        :inverted-scroll="invertedScroll"
-        :collapse="collapse"
-        :collapse-on-scroll="collapseOnScroll"
-        :shrink-on-scroll="shrinkOnScroll"
-        :extended="extended"
-      >
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-        <v-toolbar-title>
-          <v-img :src="logoImg"></v-img>
+      <v-app-bar app flat fixed id="app-bar" :color="color">
+        <div class="flex-grow-1"></div>
+        <v-toolbar-title :class="classObject" class="title" :style="{cursor: 'pointer'}">
+          <router-link :to="{path: '/'}" tag="div">Crops</router-link>
         </v-toolbar-title>
         <div class="flex-grow-1"></div>
         <v-toolbar-items v-for="title in titles" :key="title">
-          <v-btn class="titleText" text>{{ title }}</v-btn>
+          <v-btn text :class="classObject">{{ title }}</v-btn>
         </v-toolbar-items>
+        <div class="flex-grow-1"></div>
+        <v-row>
+          <router-link :to="{path: '/register'}" tag="div" class="mr-2">
+            <v-btn class="white--text px-4 title-btn" :class="[classObject, classBg]" title>免费注册</v-btn>
+          </router-link>
+          <router-link :to="{path: '/login'}" tag="div">
+            <v-btn class="title-btn" :class="classObject" title outlined>登录</v-btn>
+          </router-link>
+        </v-row>
+        <v-row class="justify-center" v-show="false">
+          <div>
+            <v-menu
+             transition="slide-y-transition"
+             close-delay
+             :nudge-left="40"
+             :nudge-bottom="50"
+            >
+              <template v-slot:activator="{ on }">
+                <v-avatar v-on="on">
+                  <img
+                   src="https://cdn.vuetifyjs.com/images/john.jpg"
+                   alt="John"
+                   :style="{cursor: 'pointer'}"
+                  >
+                </v-avatar>
+              </template>
+              <v-list>
+                <v-list-item v-for="(item, index) in items" :key="index" @click="1">
+                  <v-list-item-title>
+                    <v-icon>{{ item.icon }}</v-icon>
+                    {{ item.title }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+        </v-row>
+        <div class="flex-grow-1"></div>
       </v-app-bar>
     </v-card>
   </div>
@@ -33,28 +58,51 @@ export default {
   name: 'Header',
   data: () => ({
     titles: ['国际', '国内', '病害', '虫害', '植保知识', '产品', '资讯'],
-    elevateOnScroll: false,
-    hideOnScroll: false,
-    fadeOnScroll: false,
-    fadeImgOnScroll: false,
-    invertedScroll: false,
-    collapse: false,
-    collapseOnScroll: false,
-    shrinkOnScroll: false,
-    extended: false,
-    color: 'white',
-    colors: ['primary', 'accent', 'warning lighten-2', 'teal', 'orange'],
-    logoImg:
-      'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4wIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHdpZHRoPSIxMDBweCIgaGVpZ2h0PSIyOC45cHgiIHZpZXdCb3g9IjAgMCAxMDAgMjguOSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDI4Ljk7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIHN0eWxlPSJmaWxsOiMwMDk3ODg7IiBkPSJNNDUsMTBjMC43LDAuNSwxLjMsMS4xLDEuNywxLjljMC40LDAuOCwwLjYsMS44LDAuNiwyLjhzLTAuMiwyLTAuNiwyLjhjLTAuNCwwLjgtMSwxLjUtMS43LDEuOQ0KCQljLTAuNywwLjUtMS41LDAuNy0yLjQsMC43Yy0wLjcsMC0xLjMtMC4yLTItMC41Yy0wLjYtMC4zLTEuMS0wLjctMS41LTEuMXY0LjVjMCwwLjMtMC4xLDAuNS0wLjMsMC43Yy0wLjIsMC4yLTAuNCwwLjMtMC43LDAuMw0KCQljLTAuMywwLTAuNS0wLjEtMC43LTAuM2MtMC4yLTAuMi0wLjMtMC40LTAuMy0wLjdWMTAuNGMwLTAuMywwLjEtMC41LDAuMy0wLjdjMC4yLTAuMiwwLjQtMC4zLDAuNy0wLjNzMC41LDAuMSwwLjcsMC4zDQoJCWMwLjIsMC4yLDAuMywwLjQsMC4zLDAuN1YxMWMwLjMtMC41LDAuOC0wLjksMS40LTEuMmMwLjYtMC4zLDEuMy0wLjUsMi0wLjVDNDMuNCw5LjMsNDQuMyw5LjUsNDUsMTB6IE00NCwxOA0KCQljMC41LTAuMywwLjktMC44LDEuMi0xLjNjMC4zLTAuNiwwLjQtMS4yLDAuNC0xLjlzLTAuMS0xLjMtMC40LTEuOWMtMC4zLTAuNi0wLjctMS0xLjItMS4zYy0wLjUtMC4zLTEuMS0wLjUtMS43LTAuNQ0KCQljLTAuNiwwLTEuMiwwLjItMS43LDAuNWMtMC41LDAuMy0wLjksMC44LTEuMiwxLjNjLTAuMywwLjYtMC40LDEuMi0wLjQsMS45czAuMSwxLjMsMC40LDEuOWMwLjMsMC42LDAuNywxLDEuMiwxLjMNCgkJYzAuNSwwLjMsMS4xLDAuNSwxLjcsMC41QzQyLjksMTguNSw0My41LDE4LjMsNDQsMTh6Ii8+DQoJPHBhdGggc3R5bGU9ImZpbGw6IzAwOTc4ODsiIGQ9Ik01MS40LDE5LjhDNTEuMiwyMCw1MSwyMCw1MC43LDIwYy0wLjMsMC0wLjUtMC4xLTAuNy0wLjNjLTAuMi0wLjItMC4zLTAuNC0wLjMtMC43di0xMw0KCQljMC0wLjMsMC4xLTAuNSwwLjMtMC43YzAuMi0wLjIsMC40LTAuMywwLjctMC4zczAuNSwwLjEsMC43LDAuM2MwLjIsMC4yLDAuMywwLjQsMC4zLDAuN3YxM0M1MS43LDE5LjMsNTEuNiwxOS42LDUxLjQsMTkuOHoiLz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMDA5Nzg4OyIgZD0iTTYzLjksOS42YzAuMiwwLjIsMC4zLDAuNCwwLjMsMC43djguN2MwLDAuMy0wLjEsMC41LTAuMywwLjdDNjMuNywyMCw2My41LDIwLDYzLjIsMjANCgkJcy0wLjUtMC4xLTAuNy0wLjNjLTAuMi0wLjItMC4zLTAuNC0wLjMtMC43di0wLjVjLTAuMywwLjUtMC44LDAuOS0xLjQsMS4yYy0wLjYsMC4zLTEuMywwLjUtMiwwLjVjLTAuOSwwLTEuNy0wLjItMi41LTAuNw0KCQljLTAuNy0wLjUtMS4zLTEuMS0xLjgtMmMtMC40LTAuOC0wLjYtMS44LTAuNi0yLjhjMC0xLDAuMi0yLDAuNi0yLjhjMC40LTAuOCwxLTEuNSwxLjctMmMwLjctMC41LDEuNi0wLjcsMi40LTAuNw0KCQljMC43LDAsMS40LDAuMSwyLDAuNGMwLjYsMC4zLDEuMSwwLjcsMS41LDEuMXYtMC41YzAtMC4zLDAuMS0wLjUsMC4zLTAuN2MwLjItMC4yLDAuNC0wLjMsMC43LTAuM1M2My43LDkuNCw2My45LDkuNnogTTYwLjgsMTgNCgkJYzAuNS0wLjMsMC45LTAuOCwxLjEtMS4zYzAuMy0wLjYsMC40LTEuMiwwLjQtMS45YzAtMC43LTAuMS0xLjMtMC40LTEuOWMtMC4zLTAuNi0wLjctMS0xLjEtMS4zYy0wLjUtMC4zLTEtMC41LTEuNy0wLjUNCgkJcy0xLjIsMC4yLTEuNywwLjVjLTAuNSwwLjMtMC45LDAuOC0xLjEsMS4zYy0wLjMsMC42LTAuNCwxLjItMC40LDEuOWMwLDAuNywwLjEsMS4zLDAuNCwxLjljMC4zLDAuNiwwLjcsMSwxLjEsMS4zDQoJCWMwLjUsMC4zLDEsMC41LDEuNywwLjVTNjAuMywxOC4zLDYwLjgsMTh6Ii8+DQoJPHBhdGggc3R5bGU9ImZpbGw6IzAwOTc4ODsiIGQ9Ik03NiwxMy42djUuNWMwLDAuMy0wLjEsMC41LTAuMywwLjdDNzUuNiwyMCw3NS40LDIwLDc1LjEsMjBjLTAuMywwLTAuNS0wLjEtMC43LTAuMw0KCQljLTAuMi0wLjItMC4zLTAuNC0wLjMtMC43di01LjVjMC0wLjgtMC4yLTEuNC0wLjUtMS45Yy0wLjQtMC41LTEtMC43LTEuOC0wLjdjLTAuNSwwLTEsMC4xLTEuNSwwLjRjLTAuNCwwLjItMC44LDAuNi0xLDAuOQ0KCQljLTAuMiwwLjQtMC40LDAuOC0wLjQsMS4zdjUuNWMwLDAuMy0wLjEsMC41LTAuMywwLjdDNjguNSwyMCw2OC4zLDIwLDY4LDIwcy0wLjUtMC4xLTAuNy0wLjNTNjcsMTkuNCw2NywxOS4xdi04LjYNCgkJYzAtMC4zLDAuMS0wLjUsMC4zLTAuN2MwLjItMC4yLDAuNC0wLjMsMC43LTAuM2MwLjMsMCwwLjUsMC4xLDAuNywwLjNjMC4yLDAuMiwwLjMsMC40LDAuMywwLjd2MC43YzAuMy0wLjUsMC44LTEsMS41LTEuNA0KCQljMC42LTAuNCwxLjMtMC42LDItMC42Qzc0LjgsOS4zLDc2LDEwLjcsNzYsMTMuNnoiLz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMDA5Nzg4OyIgZD0iTTgxLjgsMTEuNHY2YzAsMC43LDAuMywxLDAuOSwxYzAuMSwwLDAuMiwwLDAuNC0wLjFjMC4yLDAsMC4zLTAuMSwwLjQtMC4xYzAuMiwwLDAuMywwLjEsMC40LDAuMg0KCQlDODQsMTguNiw4NCwxOC44LDg0LDE5YzAsMC4zLTAuMiwwLjUtMC41LDAuN2MtMC4zLDAuMi0wLjcsMC4zLTEuMSwwLjNjLTAuNCwwLTAuOCwwLTEuMi0wLjFjLTAuNC0wLjEtMC43LTAuMy0xLTAuNw0KCQljLTAuMy0wLjQtMC40LTEtMC40LTEuN3YtNi4xaC0xLjJjLTAuMywwLTAuNS0wLjEtMC42LTAuM2MtMC4yLTAuMi0wLjMtMC40LTAuMy0wLjZjMC0wLjMsMC4xLTAuNSwwLjMtMC42DQoJCWMwLjItMC4yLDAuNC0wLjIsMC42LTAuMmgxLjJWNy45YzAtMC4zLDAuMS0wLjUsMC4zLTAuN0M4MC4zLDcuMSw4MC41LDcsODAuOCw3YzAuMywwLDAuNSwwLjEsMC43LDAuM2MwLjIsMC4yLDAuMywwLjQsMC4zLDAuNw0KCQl2MS43aDEuN2MwLjMsMCwwLjUsMC4xLDAuNiwwLjNjMC4yLDAuMiwwLjMsMC40LDAuMywwLjZzLTAuMSwwLjUtMC4zLDAuNmMtMC4yLDAuMi0wLjQsMC4yLTAuNiwwLjJIODEuOHoiLz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMDA5Nzg4OyIgZD0iTTg2LjYsNy45Yy0wLjItMC4xLTAuMy0wLjQtMC4zLTAuN1Y2LjljMC0wLjMsMC4xLTAuNiwwLjMtMC43Qzg2LjgsNiw4Nyw2LDg3LjQsNg0KCQljMC40LDAsMC42LDAuMSwwLjgsMC4yYzAuMiwwLjEsMC4zLDAuNCwwLjMsMC43djAuM2MwLDAuMy0wLjEsMC42LTAuMywwLjdDODgsOCw4Ny44LDguMSw4Ny40LDguMUM4Nyw4LjEsODYuNyw4LDg2LjYsNy45eg0KCQkgTTg4LjEsMTkuOEM4Ny45LDIwLDg3LjcsMjAsODcuNCwyMGMtMC4zLDAtMC41LTAuMS0wLjctMC4zYy0wLjItMC4yLTAuMy0wLjQtMC4zLTAuN3YtOC43YzAtMC4zLDAuMS0wLjUsMC4zLTAuNw0KCQljMC4yLTAuMiwwLjQtMC4zLDAuNy0wLjNjMC4zLDAsMC41LDAuMSwwLjcsMC4zYzAuMiwwLjIsMC4zLDAuNCwwLjMsMC43djguN0M4OC40LDE5LjMsODguMywxOS42LDg4LjEsMTkuOHoiLz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMDA5Nzg4OyIgZD0iTTk5LDE5LjFjMCwwLjMtMC4xLDAuNS0wLjMsMC43Yy0wLjIsMC4yLTAuNCwwLjMtMC43LDAuM2MtMC4zLDAtMC42LTAuMS0wLjgtMC40bC0yLjctMy40bC0yLjcsMy40DQoJCWMtMC4xLDAuMS0wLjIsMC4yLTAuMywwLjNjLTAuMSwwLjEtMC4zLDAuMS0wLjQsMC4xYy0wLjIsMC0wLjQtMC4xLTAuNi0wLjNjLTAuMi0wLjItMC4zLTAuNC0wLjMtMC42YzAtMC4yLDAuMS0wLjQsMC4yLTAuNmwzLTMuOA0KCQlMOTAuMywxMWMtMC4xLTAuMi0wLjItMC40LTAuMi0wLjZjMC0wLjMsMC4xLTAuNSwwLjMtMC43YzAuMi0wLjIsMC40LTAuMywwLjctMC4zYzAuMywwLDAuNiwwLjEsMC44LDAuNGwyLjgsMy41bDIuNi0zLjUNCgkJYzAuMi0wLjMsMC41LTAuNCwwLjgtMC40YzAuMywwLDAuNSwwLjEsMC42LDAuM2MwLjIsMC4yLDAuMywwLjQsMC4zLDAuNmMwLDAuMy0wLjEsMC41LTAuMiwwLjZsLTMsMy44bDMuMSwzLjkNCgkJQzk4LjksMTguNyw5OSwxOC45LDk5LDE5LjF6Ii8+DQo8L2c+DQo8Zz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMUE2MjU5OyIgZD0iTTIyLjMsMy44YzAsMTAuOC01LjIsMTEuNS03LjgsOS43YzQuNS0zLjYsNi4yLTYuOSw2LjItNi45cy0xLjUsMi42LTUuNSw1LjYNCgkJYy0xLjcsMS4zLTQuNCwzLjgtNS43LDYuN2wwLDBjLTAuMSwwLjItMC4xLDAuMy0wLjIsMC41Yy0xLjEsMy40LDAuNyw3LDQuMSw4LjJjMS4xLDAuNCwyLjMsMC40LDMuMywwLjJsMCwwDQoJCWM0LjYtMC45LDguNy00LjEsMTAuMy04LjlDMjksMTMuMywyNi45LDcuMiwyMi4zLDMuOHogTTExLDE5LjFjMC45LTEuMiwxMSwxLjMsMTEsMS4zcy03LjEtMi40LTEwLjctMi4yYzEtMS40LDUtNC41LDEyLjYsMi41DQoJCUMxNCwyNSwxMC4xLDIxLjEsMTEsMTkuMXoiLz4NCgk8cGF0aCBzdHlsZT0iZmlsbDojMDA5Njg2OyIgZD0iTTEuNiwxMC4zQy0wLjgsMTcuNCwzLDI1LDEwLDI3LjRjMC4yLDAuMSwwLjMsMC4xLDAuNSwwLjFjLTEuOC0xLjgtMi43LTMuOC0yLjUtNS45DQoJCWMwLjQtMy45LDMuMS02LjgsNS43LTguOWMtMS43LTMuMSwwLjktNS4yLDguNy04LjlDMjEuMiwzLDIwLDIuNCwxOC42LDEuOUMxMS42LTAuNSw0LDMuMywxLjYsMTAuM3ogTTkuMywxNS42DQoJCUM5LjYsMTAuNyw1LjksNyw1LjksN3MzLjYsNC41LDIuOCw5Yy0yLjYsMC45LTQuMi0xLTMuNC05LjlDMTQsMTEuMiwxMS4xLDE0LjgsOS4zLDE1LjZ6Ii8+DQo8L2c+DQo8L3N2Zz4NCg=='
-  })
+    color: null,
+    isActive: false,
+    items: [
+      { title: '信息设置', icon: 'account_box'},
+      { title: '账号设置', icon: 'assignment_ind'},
+      { title: '账号退出', icon: 'power_settings_new'}
+    ],
+  }),
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+  computed: {
+    classObject () {
+      return {
+        'text-color-white': !this.isActive
+      }
+    },
+    classBg () {
+      return {
+        black: this.isActive,
+        accent: !this.isActive
+      }
+    }
+  },
+  methods: {
+    handleScroll () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      this.isActive = scrollTop > 0
+      this.color = scrollTop > 0 ? 'white' : null
+    }
+  }
 }
 </script>
 
 <style lang="stylus" scoped>
-  .bgparent
+  #app-bar
+    border-radius 0px
     background-color transparent
-  .titleText
-    color #009788
-    font-size 17px
-    font-weight bold
+  .router-link-active
+    text-decoration: none
+  .title-btn
+    border-radius 2px
+  .text-color-white
+    color #fff !important
 </style>

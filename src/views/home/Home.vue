@@ -1,29 +1,31 @@
 <template>
-  <div id="Home" class="overflow-y-auto">
-    <SystemBar />
-    <v-container>
-      <Header />
-    </v-container>
-    <div >
-      <HelloWorld />
-      <Footer />
-    </div>
+  <div
+   id="Home"
+   class="overflow-y-auto"
+  >
+    <Header />
+    <HelloWorld />
+    <Featrue />
+    <Steppers />
+    <Footer />
   </div>
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld.vue'
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
-import SystemBar from './components/System-bar.vue'
+import HelloWorld from './components/HelloWorld'
+import Featrue from './components/Feature'
+import Steppers from './components/Steppers'
 
 export default {
   name: 'Home',
   components: {
+    Featrue,
     HelloWorld,
+    Steppers,
     Header,
-    Footer,
-    SystemBar
+    Footer
   },
   data () {
     return {

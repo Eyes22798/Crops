@@ -198,7 +198,7 @@ export default function $axios (options) {
               break
 
             case 500:
-              err.message = '服务器内部错误'
+              err.message = '服务器繁忙,请稍后再试!'
               break
 
             case 501:
