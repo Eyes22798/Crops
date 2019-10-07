@@ -227,7 +227,8 @@ export default {
                 y: 'top',
                 icon: 'info',
                 dismissable: false,
-                showClose: true
+                showClose: true,
+                timeout: 800
               })
               setTimeout(() => {
                 this.loading4 = false

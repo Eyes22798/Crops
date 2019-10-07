@@ -11,7 +11,7 @@
           <v-btn text :class="classObject">{{ title }}</v-btn>
         </v-toolbar-items>
         <div class="flex-grow-1"></div>
-        <v-row>
+        <v-row v-if="!userInfo">
           <router-link :to="{path: '/register'}" tag="div" class="mr-2">
             <v-btn class="white--text px-4 title-btn" :class="[classObject, classBg]" title>免费注册</v-btn>
           </router-link>
@@ -19,7 +19,7 @@
             <v-btn class="title-btn" :class="classObject" title outlined>登录</v-btn>
           </router-link>
         </v-row>
-        <v-row class="justify-center" v-show="false">
+        <v-row class="justify-center" v-if="userInfo">
           <div>
             <v-menu
              transition="slide-y-transition"
@@ -37,7 +37,7 @@
                 </v-avatar>
               </template>
               <v-list>
-                <v-list-item v-for="(item, index) in items" :key="index" @click="1">
+                <v-list-item v-for="(item, index) in items" :key="index" @click="handleClick(item.title)">
                   <v-list-item-title>
                     <v-icon>{{ item.icon }}</v-icon>
                     {{ item.title }}
@@ -54,25 +54,37 @@
 </template>
 
 <script>
+import * as types from '@/store/global/mutation-types'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'Header',
   data: () => ({
+    phone: 12345679,
     titles: ['国际', '国内', '病害', '虫害', '植保知识', '产品', '资讯'],
     color: null,
     isActive: false,
     items: [
-      { title: '信息设置', icon: 'account_box'},
-      { title: '账号设置', icon: 'assignment_ind'},
-      { title: '账号退出', icon: 'power_settings_new'}
-    ],
+      {
+        title: '个人设置',
+        icon: 'account_box'
+      },
+      {
+        title: '账号设置',
+        icon: 'assignment_ind'
+      },
+      {
+        title: '账号退出',
+        icon: 'power_settings_new'
+      }
+    ]
   }),
-  mounted () {
-    window.addEventListener('scroll', this.handleScroll)
-  },
-  destroyed () {
-    window.removeEventListener('scroll', this.handleScroll)
-  },
   computed: {
+    ...mapGetters({
+      userInfo: 'userData'
+    }),
+    ...mapMutations({
+      removeUserInfoData: types.REMOVE_USERINFO
+    }),
     classObject () {
       return {
         'text-color-white': !this.isActive
@@ -85,11 +97,52 @@ export default {
       }
     }
   },
+  created () {
+    // 如果，state 中的 userInfo 没有数据（用户没有登录）更改 view
+    if (!this.userInfo) {
+      console.log('用户数据为空')
+    }
+    this.phone = this.userInfo.phone
+  },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   methods: {
+    loginout () {
+      this.$api.common
+        .loginout(this.phone)
+        .then(res => {
+          console.log('请求成功！')
+          console.log(this.removeUserInfoData())
+        })
+    },
+    setUserInfo () {
+      console.log('我是个人设置')
+    },
+    setAccount () {
+      console.log('我是账号设置')
+    },
     handleScroll () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.isActive = scrollTop > 0
       this.color = scrollTop > 0 ? 'white' : null
+    },
+    handleClick (title) {
+      const funObj = {
+        '个人设置': () => {
+          this.setUserInfo()
+        },
+        '账号设置': () => {
+          this.setAccount()
+        },
+        '账号退出': () => {
+          this.loginout()
+        }
+      }
+      funObj[title]()
     }
   }
 }
