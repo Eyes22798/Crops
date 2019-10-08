@@ -82,9 +82,6 @@ export default {
     ...mapGetters({
       userInfo: 'userData'
     }),
-    ...mapMutations({
-      removeUserInfoData: types.REMOVE_USERINFO
-    }),
     classObject () {
       return {
         'text-color-white': !this.isActive
@@ -111,12 +108,25 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
+    ...mapMutations({
+      removeUserInfoData: types.REMOVE_USERINFO
+    }),
     loginout () {
       this.$api.common
         .loginout(this.phone)
         .then(res => {
-          console.log('请求成功！')
-          console.log(this.removeUserInfoData())
+          if (res.code === 200) {
+            // 请求成功，清除 localStorage 中的 userInfo
+            this.$toast('退出成功!', {
+              x: 'right',
+              y: 'top',
+              icon: 'info',
+              dismissable: false,
+              showClose: true,
+              timeout: 800
+            })
+            this.removeUserInfoData()
+          }
         })
     },
     setUserInfo () {

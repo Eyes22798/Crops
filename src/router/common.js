@@ -1,7 +1,3 @@
-import Home from '@/views/home/Home.vue'
-import Login from '@/views/login/Login.vue'
-import Register from '@/views/register/Register.vue'
-
 const COMMON_ROUTER = [{
   path: '/',
   name: 'Home',
@@ -10,7 +6,7 @@ const COMMON_ROUTER = [{
     requireAuth: false
   },
   // 跳默认路由用redirect
-  component: Home
+  component: () => import(/* webpackChunkName: "Home" */ '@/views/home/Home.vue')
 },
 {
   path: '/login',
@@ -19,7 +15,7 @@ const COMMON_ROUTER = [{
     title: '登录',
     requireAuth: false
   },
-  component: Login
+  component: () => import(/* webpackChunkName: "Login" */ '@/views/login/Login.vue')
 },
 {
   path: '/register',
@@ -28,7 +24,25 @@ const COMMON_ROUTER = [{
     title: '注册',
     requireAuth: false
   },
-  component: Register
+  component: () => import(/* webpackChunkName: "Register" */ '@/views/register/Register.vue')
+},
+{
+  path: '/404',
+  name: '404',
+  meta: {
+    title: '404',
+    requireAuth: false
+  },
+  component: () => import(/* webpackChunkName: "404" */ '@/views/error/404/404.vue')
+},
+{
+  path: '/500',
+  name: '500',
+  meta: {
+    title: '500',
+    requireAuth: false
+  },
+  component: () => import(/* webpackChunkName: "500" */ '@/views/error/500/500.vue')
 }
 ]
 
