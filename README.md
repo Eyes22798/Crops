@@ -236,25 +236,62 @@ import globalStore from '@/store/global'					// 全局路由token或cookie或 js
 import router from '@/router'								// 404、 跳转 login 跳转				
 ```
 
-#### 2.2.3 封装 `toLogin`() 跳转登录
+#### 2.2.3 封装路由跳转
 
 ``` js
-const toLogin = () => {
+const routerToObj = (type) => {
   router.replace({
-    path: '/login',
+    path: `/${type}`,
     query: {
       redirect: router.currentRoute.fullPath
     }
   })
 }
+// 根据 type 传值 跳转不同的 view
+routerToObj('login')
 ```
 
 #### 2.2.4 封装 `HTTP` 状态码 错误处理
 
-> 后端未统一，赶快和后端商量
-
 ``` js
+const errorHandle = (status, other) => {
+  // 状态码判断
+  const items = [
+    [404, '数据不存在，请刷新一下'],
+    [405, '请求出错，请再一下'],
+    [406, '您未登录，请先登录'],
+    [409, '服务端数据操作错误'],
+    [500, '服务器错误，请稍后再试'],
+    [1000, '用户名或者密码错误'],
+    [1001, '该号码未注册，请先注册'],
+    [1002, '验证码错误'],
+    [1003, '登录已过期，请重新登录'],
+    [1004, '该号码已停用，请重新输入'],
+    [1005, '请使用一个新的电话号码'],
+    [1006, '未找到任何相关信息']
+  ]
+  console.log(other)
+  const statusMap = new Map(items)
+  return statusMap.get(status)
+}
 
+const serverErrorHanle = (status) => {
+  const items = [
+    [400, '请求错误'],
+    [401, '未授权，请登录'],
+    [403, '拒绝访问'],
+    [404, '请求地址出错'],
+    [408, '请求超时'],
+    [500, '服务器繁忙，请稍后再试'],
+    [501, '服务器未实现'],
+    [502, '网络错误'],
+    [503, '服务不可用'],
+    [504, '网络超时'],
+    [505, 'HTTP版本不受支持']
+  ]
+  const errorMap = new Map(items)
+  return errorMap.get(status)
+}
 ```
 
 #### 2.2.5 `Axios` 封装 骨架
@@ -461,7 +498,7 @@ export default function $axios (options) {
  // http request 拦截器
     instance.interceptors.request.use(
       config => {
-        if (config.params) {
+        if (config) {
           NProgress.start()
         }
         console.log(config)
@@ -481,7 +518,7 @@ export default function $axios (options) {
           })
           // 没有 cookie 重定向到登录页
           setTimeout(() => {
-            toLogin()
+            routerToObj('login')
           }, 2000)
         }
         // 根据请求方法，序列化传来的参数，根据后端需求是否序列化
@@ -493,8 +530,6 @@ export default function $axios (options) {
         return config
       },
       error => {
-        // 请求错误时做些事(接口错误、超时等) 关闭 nprogress
-        NProgress.done()
         console.log('request:', error)
         $toast('异常错误!', {
           x: 'right',
@@ -548,117 +583,51 @@ export default function $axios (options) {
  // response 拦截器
     instance.interceptors.response.use(
       response => {
+        console.log(response)
+        // 1. 保存 response 中的数据
+        //    注意： IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
         let data
-        const responseError = new Error()
-        responseError.data = data
-        responseError.response = response
-        const errorHandle = (status, other) => {
-          // 状态码判断
-          switch (status) {
-            case 1000:
-              responseError.message = '用户名或者密码错误'
-              break
-            case 1001:
-              responseError.message = '该号码未绑定，请先注册'
-              break
-            case 1002:
-              responseError.message = '验证码错误'
-              break
-            case 1003:
-              responseError.message = '登录过期，请重新登录'
-              break
-            case 1004:
-              responseError.message = '该号码已被注册，请重新输入'
-              break
-            case 1005:
-              responseError.message = '请选择新的电话号码'
-              break
-            case 1006:
-              responseError.message = '未找到任何相关信息'
-              break
-            default:
-              console.log(other)
-          }
-        }
-        // IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
         if (response.data === undefined) {
           data = response.request.responseText
         } else {
           data = response.data
         }
-        // 一切正常 结束 Nprogress
-        NProgress.done()
-        // 根据返回的code值来做不同的处理
-        console.log(data)
-        errorHandle(data.code, response.data.message)
-        // 显示错误消息
-        let errMessage = !!responseError.message
-        if (errMessage) {
+        // 2. 处理错误请求 ==> 根据返回的code值来做不同的处理
+        const responseError = new Error()
+        responseError.data = data
+        responseError.response = response
+        if (data.errcode === 404) {
+          setTimeout(() => {
+            routerToObj('404')
+          })
+        }
+        responseError.message = errorHandle(data.code, response.data.message)
+        // 3. 错误 => 显示错误消息 || 正常 => 结束 Nprogress 动画
+        if (responseError.message) {
           $toast(`错误消息: ${responseError.message}`, {
             x: 'right',
             y: 'top',
             icon: 'info',
             color: 'error',
             dismissable: false,
-            showClose: true
+            showClose: true,
+            timeout: 2000
           })
+        } else {
+          NProgress.done()
         }
         return data
       },
       err => {
         NProgress.done()
         if (err && err.response) {
-          switch (err.response.status) {
-            case 400:
-              err.message = '请求错误'
-              break
-
-            case 401:
-              err.message = '未授权，请登录'
-              break
-
-            case 403:
-              err.message = '拒绝访问'
-              break
-
-            case 404:
-              err.message = `请求地址出错: ${err.response.config.url}`
-              break
-
-            case 408:
-              err.message = '请求超时'
-              break
-
-            case 500:
-              err.message = '服务器繁忙,请稍后再试!'
-              break
-
-            case 501:
-              err.message = '服务未实现'
-              break
-
-            case 502:
-              err.message = '网关错误'
-              break
-
-            case 503:
-              err.message = '服务不可用'
-              break
-
-            case 504:
-              err.message = '网关超时'
-              break
-
-            case 505:
-              err.message = 'HTTP版本不受支持'
-              break
-
-            default:
-          }
+          err.message = serverErrorHanle(err.response.status)
         }
         if (err.toString().includes('timeout')) {
           err.message = '抱歉，服务器超时，请稍后再试！'
         }
+        // 404 500 状态码跳转
+        routerToObj(`${err.response.status}`)
         console.error(`错误消息： ${err}`)
         // 显示错误消息
         $toast(`错误: ${err.message}`, {
@@ -698,7 +667,7 @@ const install = Vue => {
 export default install
 
 // this.$api.common.login()
-// this.$api.common.loginout().then(res => {console.log(res)})
+this.$api.common.loginout().then(res => {console.log(res)})
 ```
 
 
@@ -879,9 +848,6 @@ router.beforeEach((to, from, next)) => {
 ========================================================================================
    common.js 文件
 ========================================================================================
-import Home from '@/views/home/Home.vue'
-import Login from '@/views/login/Login.vue'
-
 const COMMON_ROUTER = [{
   path: '/',
   name: 'Home',
@@ -890,7 +856,7 @@ const COMMON_ROUTER = [{
     requireAuth: false
   },
   // 跳默认路由用redirect
-  component: Home
+  component: () => import(/* webpackChunkName: "Home" */ '@/views/home/Home.vue')
 },
 {
   path: '/login',
@@ -899,11 +865,39 @@ const COMMON_ROUTER = [{
     title: '登录',
     requireAuth: false
   },
-  component: Login
+  component: () => import(/* webpackChunkName: "Login" */ '@/views/login/Login.vue')
+},
+{
+  path: '/register',
+  name: 'Register',
+  meta: {
+    title: '注册',
+    requireAuth: false
+  },
+  component: () => import(/* webpackChunkName: "Register" */ '@/views/register/Register.vue')
+},
+{
+  path: '/404',
+  name: '404',
+  meta: {
+    title: '404',
+    requireAuth: false
+  },
+  component: () => import(/* webpackChunkName: "404" */ '@/views/error/404/404.vue')
+},
+{
+  path: '/500',
+  name: '500',
+  meta: {
+    title: '500',
+    requireAuth: false
+  },
+  component: () => import(/* webpackChunkName: "500" */ '@/views/error/500/500.vue')
 }
 ]
 
 export default COMMON_ROUTER
+
 
 ```
 
