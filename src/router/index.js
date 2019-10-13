@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'
 import common from './common'
 import expert from './expert'
 import ordinary from './ordinary'
+import globalStore from '@/store/global'
 
 Vue.use(Router)
 
@@ -30,7 +31,7 @@ router.beforeEach((to, from, next) => {
   // 验证是否需要登录
   if (to.matched.some(res => res.meta.requireAuth)) {
     // 查询本地是否登录
-    if (this.$store.state.sessionID) {
+    if (globalStore.state.sessionID) {
       next()
     } else {
       // 避免登录死循环

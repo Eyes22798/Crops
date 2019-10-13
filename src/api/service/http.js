@@ -5,7 +5,9 @@ import 'nprogress/nprogress.css'
 
 import config from '../config'
 import {
-  getCookie
+  getCookie,
+  setCookie,
+  delCookie
 } from '@/common/untils/cookieUntil'
 import globalStore from '@/store/global'
 import router from '@/router'
@@ -154,6 +156,12 @@ export default function $axios (options) {
     instance.interceptors.response.use(
       response => {
         console.log(response)
+        // 拿到 header 上的 cookie
+        let cookie = []
+        if (response.headers.cookie) {
+          cookie = response.headers.cookie.toString().split('=')
+          setCookie(cookie[0], cookie[1], 50000)
+        }
         // 1. 保存 response 中的数据
         //    注意： IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
         let data
@@ -166,10 +174,16 @@ export default function $axios (options) {
         const responseError = new Error()
         responseError.data = data
         responseError.response = response
+        // 特殊状态码特殊处理
         if (data.errcode === 404) {
           setTimeout(() => {
             routerToObj('404')
           })
+        } else if (data.code === 1003) {
+          // 清除 localstorage cookie 跳转登录
+          delCookie('JSESSIONID')
+          localStorage.clear()
+          routerToObj('login')
         }
         responseError.message = errorHandle(data.code, response.data.message)
         // 3. 错误 => 显示错误消息 || 正常 => 结束 Nprogress 动画

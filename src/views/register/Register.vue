@@ -1,255 +1,237 @@
 <template>
-  <v-app id="inspire" class="split-bg success theme--light">
-    <v-content>
-      <v-container class="fill-height" fluid>
-        <v-layout class="align-center justify-center">
-          <v-flex xs12 sm8 md4 lg4>
-            <v-card class="elevation-12" pa-3>
-              <div class="layout column align-center">
-                <img
-                  :src="require('@/assets/images/logo.png')"
-                  alt="Vue Material Admin"
-                  width="100"
-                  height="100"
-                />
-                <h1 class="flex mt-n6 mb-4 success--text">账号注册</h1>
-              </div>
-              <v-stepper
-               v-model="e1"
-               :alt-labels="altLabels"
-              >
-                <v-stepper-header>
-                  <v-stepper-step :complete="e1 > 1" step="1" color="success">个人账号</v-stepper-step>
-                  <v-divider></v-divider>
-                  <v-stepper-step :complete="e1 > 2" step="2" color="success">手机验证</v-stepper-step>
-                  <v-divider></v-divider>
-                  <v-stepper-step step="3" color="success">个人详细信息</v-stepper-step>
-                </v-stepper-header>
-                <v-stepper-items>
-                  <v-form>
-                    <v-stepper-content step="1">
-                      <v-text-field
-                        ref="username"
-                        id="username"
-                        label="用户名"
-                        name="username"
-                        prepend-icon="person"
-                        type="text"
-                        :rules="rules.usernameRules"
-                        :clearable="clearable"
-                        v-model="username"
-                        required
-                      ></v-text-field>
-                      <v-text-field
-                        ref="password"
-                        id="password"
-                        label="密码"
-                        name="password"
-                        prepend-icon="lock"
-                        :append-icon="show ? 'visibility' : 'visibility_off'"
-                        :type="show ? 'text' : 'password'"
-                        :rules="rules.passwordRules"
-                        :clearable="clearable"
-                        v-model="password"
-                        counter="10"
-                        maxlength="10"
-                        required
-                        @click:append="show = !show"
-                      ></v-text-field>
-                      <v-text-field
-                        ref="password2"
-                        id="password2"
-                        label="确认密码"
-                        name="password2"
-                        prepend-icon="lock"
-                        :append-icon="show ? 'visibility' : 'visibility_off'"
-                        :type="show ? 'text' : 'password'"
-                        :rules="rules.passwordConformRules"
-                        :clearable="clearable"
-                        v-model="password2"
-                        counter="10"
-                        maxlength="10"
-                        required
-                        @click:append="show = !show"
-                      ></v-text-field>
-                      <v-row class="mt-2">
-                        <div class="flex-grow-1"></div>
-                        <v-btn color="success" class="mr-3" @click="e1 = 2">Continue</v-btn>
-                      </v-row>
-                    </v-stepper-content>
-                    <v-stepper-content step="2">
-                      <v-row>
-                        <v-col cols="8" lg="8">
-                          <v-text-field
-                            ref="phone"
-                            id="phone"
-                            label="手机号"
-                            name="phone"
-                            prepend-icon="phone"
-                            type="text"
-                            :rules="rules.phoneRules"
-                            :clearable="clearable"
-                            v-model="phone"
-                            counter="11"
-                            maxlength="11"
-                            required
-                          ></v-text-field>
-                        </v-col>
-                        <v-col cols="4" lg="4">
-                          <v-btn
-                            :loading="loading3"
-                            :disabled="disabled"
-                            color="info"
-                            class="mt-3 px-10 white--text float-right"
-                            @click="loader = 'loading3';getSendCode(phone)"
-                          >{{ loadingText }}</v-btn>
+    <v-app id="inspire" class="split-bg success theme--light">
+      <v-content>
+        <v-container class="fill-height" fluid>
+          <v-layout class="align-center justify-center">
+            <v-flex xs12 sm8 md4 lg4 class="mb-10">
+              <v-card class="elevation-12" pa-3>
+                <div class="layout column align-center">
+                  <img
+                    :src="require('@/assets/images/logo.png')"
+                    alt="Vue Material Admin"
+                    width="100"
+                    height="100"
+                  />
+                  <h1 class="flex mt-n6 mb-4 success--text">账号注册</h1>
+                </div>
+                <v-stepper v-model="e1" :alt-labels="altLabels">
+                  <v-stepper-header>
+                    <v-stepper-step :complete="e1 > 1" step="1" color="success">个人账号</v-stepper-step>
+                    <v-divider></v-divider>
+                    <v-stepper-step :complete="e1 > 2" step="2" color="success">手机验证</v-stepper-step>
+                    <v-divider></v-divider>
+                    <v-stepper-step step="3" color="success">个人详细信息</v-stepper-step>
+                  </v-stepper-header>
+                  <v-stepper-items>
+                    <v-form>
+                      <v-stepper-content step="1">
+                        <v-text-field
+                          ref="username"
+                          id="username"
+                          label="用户名"
+                          name="username"
+                          prepend-icon="person"
+                          type="text"
+                          :rules="rules.usernameRules"
+                          :clearable="clearable"
+                          v-model="username"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          ref="password"
+                          id="password"
+                          label="密码"
+                          name="password"
+                          prepend-icon="lock"
+                          :append-icon="show ? 'visibility' : 'visibility_off'"
+                          :type="show ? 'text' : 'password'"
+                          :rules="rules.passwordRules"
+                          :clearable="clearable"
+                          v-model="password"
+                          counter="10"
+                          maxlength="10"
+                          required
+                          @click:append="show = !show"
+                        ></v-text-field>
+                        <v-text-field
+                          ref="password2"
+                          id="password2"
+                          label="确认密码"
+                          name="password2"
+                          prepend-icon="lock"
+                          :append-icon="show ? 'visibility' : 'visibility_off'"
+                          :type="show ? 'text' : 'password'"
+                          :rules="rules.passwordConformRules"
+                          :clearable="clearable"
+                          v-model="password2"
+                          counter="10"
+                          maxlength="10"
+                          required
+                          @click:append="show = !show"
+                        ></v-text-field>
+                        <v-row class="mt-2">
+                          <div class="flex-grow-1"></div>
+                          <v-btn color="success" class="mr-3" @click="e1 = 2">Continue</v-btn>
+                        </v-row>
+                      </v-stepper-content>
+                      <v-stepper-content step="2">
+                        <v-row>
+                          <v-col cols="8" lg="8">
+                            <v-text-field
+                              ref="phone"
+                              id="phone"
+                              label="手机号"
+                              name="phone"
+                              prepend-icon="phone"
+                              type="text"
+                              :rules="rules.phoneRules"
+                              :clearable="clearable"
+                              v-model="phone"
+                              counter="11"
+                              maxlength="11"
+                              required
+                            ></v-text-field>
                           </v-col>
-                      </v-row>
-                      <v-row class="mt-2">
-                        <v-btn color="success" class="ml-3" @click="e1 = 1">Back</v-btn>
-                        <div class="flex-grow-1"></div>
-                        <v-btn color="success" class="mr-3" @click="e1 = 3">Continue</v-btn>
-                      </v-row>
-                    </v-stepper-content>
-                    <v-stepper-content step="3">
-                      <v-radio-group v-model="role" row class="d-flex justify-center">
-                        <v-radio
-                         label="我是普通用户"
-                         id="ordinary"
-                         color="success"
-                         value="3"
-                        ></v-radio>
-                        <v-radio
-                         label="我是专家用户"
-                         id="expert"
-                         color="success"
-                         value="2"
-                        ></v-radio>
-                      </v-radio-group>
-                      <v-text-field
-                        ref="name"
-                        id="name"
-                        label="姓名"
-                        name="name"
-                        prepend-icon="person"
-                        type="text"
-                        :rules="rules.nameRules"
-                        :clearable="clearable"
-                        v-model="name"
-                        required
-                      ></v-text-field>
-                      <v-text-field
-                        ref="email"
-                        id="email"
-                        label="邮箱"
-                        name="email"
-                        prepend-icon="email"
-                        type="email"
-                        :rules="rules.emailRules"
-                        :clearable="clearable"
-                        v-model="email"
-                        required
-                      ></v-text-field>
-                      <v-text-field
-                       ref="postcode"
-                       id="postcode"
-                       label="邮政编码"
-                       name="postcode"
-                       prepend-icon="fa fa-globe"
-                       type="text"
-                       :rules="[() => !!postcode || '请输入你的邮政编码']"
-                       :clearable="clearable"
-                       v-model="postcode"
-                       hint="请输入正确的邮政编码"
-                      ></v-text-field>
-                      <v-select
-                       ref="province"
-                       id="province"
-                       label="省"
-                       name="province"
-                       prepend-icon="map"
-                       :rules="[() => !!province || '请选择您的省份']"
-                       :items="provinces"
-                       :clearable="clearable"
-                       :chips="chips"
-                       v-model="province"
-                       @change="getAddressData($event, 'province')"
-                      >
-                      </v-select>
-                      <v-select
-                       ref="city"
-                       id="city"
-                       label="市"
-                       name="city"
-                       prepend-icon="map"
-                       :rules="[() => !!city || '请选择您的市/县']"
-                       :items="cities"
-                       :clearable="clearable"
-                       :chips="chips"
-                       v-model="city"
-                       @change="getAddressData($event, 'city')"
-                      >
-                      </v-select>
-                      <v-select
-                       ref="address"
-                       id="address"
-                       label="县"
-                       name="address"
-                       prepend-icon="map"
-                       :rules="[() => !!address || '请选择您的县/区']"
-                       :items="districts"
-                       :clearable="clearable"
-                       :chips="chips"
-                       v-model="address"
-                       @change="getAddressData($event, 'district')"
-                      >
-                      </v-select>
-                      <v-textarea
-                        ref="introduction"
-                        id="introduction"
-                        label="个人介绍"
-                        name="introduction"
-                        prepend-icon="info"
-                        :rules="[() => !!introduction || '请填写您的个人介绍']"
-                        clearable
-                        clear-icon="cancel"
-                        v-model="introduction"
-                        hint="输入您的个人介绍"
-                      ></v-textarea>
-                      <v-row class="mt-2">
-                        <v-btn color="success" class="ml-3" @click="e1 = 2">Back</v-btn>
-                        <div class="flex-grow-1"></div>
-                        <v-slide-x-reverse-transition>
-                          <v-tooltip
-                            v-if="formHasErrors"
-                            left
-                          >
-                            <template v-slot:activator="{ on }">
-                              <v-btn
-                                icon
-                                class="my-0"
-                                @click="resetForm"
-                                v-on="on"
-                              >
-                                <v-icon>mdi-refresh</v-icon>
-                              </v-btn>
-                            </template>
-                            <span>重新输入</span>
-                          </v-tooltip>
-                        </v-slide-x-reverse-transition>
-                        <v-btn color="info light" :fab="fab" class="mr-3" @click="register" :loading="loading4">Submit</v-btn>
-                      </v-row>
-                    </v-stepper-content>
-                  </v-form>
-                </v-stepper-items>
-              </v-stepper>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-content>
-    <Footer />
-  </v-app>
+                          <v-col cols="4" lg="4">
+                            <v-btn
+                              :loading="loading3"
+                              :disabled="disabled"
+                              color="info"
+                              class="mt-3 px-10 white--text float-right"
+                              @click="loader = 'loading3';getSendCode(phone)"
+                            >{{ loadingText }}</v-btn>
+                          </v-col>
+                        </v-row>
+                        <v-row class="mt-2">
+                          <v-btn color="success" class="ml-3" @click="e1 = 1">Back</v-btn>
+                          <div class="flex-grow-1"></div>
+                          <v-btn color="success" class="mr-3" @click="e1 = 3">Continue</v-btn>
+                        </v-row>
+                      </v-stepper-content>
+                      <v-stepper-content step="3">
+                        <v-radio-group v-model="role" row class="d-flex justify-center">
+                          <v-radio label="我是普通用户" id="ordinary" color="success" value="3"></v-radio>
+                          <v-radio label="我是专家用户" id="expert" color="success" value="2"></v-radio>
+                        </v-radio-group>
+                        <v-text-field
+                          ref="name"
+                          id="name"
+                          label="姓名"
+                          name="name"
+                          prepend-icon="person"
+                          type="text"
+                          :rules="rules.nameRules"
+                          :clearable="clearable"
+                          v-model="name"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          ref="email"
+                          id="email"
+                          label="邮箱"
+                          name="email"
+                          prepend-icon="email"
+                          type="email"
+                          :rules="rules.emailRules"
+                          :clearable="clearable"
+                          v-model="email"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          ref="postcode"
+                          id="postcode"
+                          label="邮政编码"
+                          name="postcode"
+                          prepend-icon="fa fa-globe"
+                          type="number"
+                          :rules="[() => !!postcode || '请输入你的邮政编码']"
+                          :clearable="clearable"
+                          v-model="postcode"
+                          hint="请输入正确的邮政编码"
+                        ></v-text-field>
+                        <v-select
+                          ref="province"
+                          id="province"
+                          label="省"
+                          name="province"
+                          prepend-icon="map"
+                          :rules="[() => !!province || '请选择您的省份']"
+                          :items="provinces"
+                          :clearable="clearable"
+                          :chips="chips"
+                          v-model="province"
+                          @change="getAddressData($event, 'province')"
+                        ></v-select>
+                        <v-select
+                          ref="city"
+                          id="city"
+                          label="市"
+                          name="city"
+                          prepend-icon="map"
+                          :rules="[() => !!city || '请选择您的市/县']"
+                          :items="cities"
+                          :clearable="clearable"
+                          :chips="chips"
+                          v-model="city"
+                          @change="getAddressData($event, 'city')"
+                        ></v-select>
+                        <v-select
+                          ref="address"
+                          id="address"
+                          label="县"
+                          name="address"
+                          prepend-icon="map"
+                          :rules="[() => !!address || '请选择您的县/区']"
+                          :items="districts"
+                          :clearable="clearable"
+                          :chips="chips"
+                          v-model="address"
+                          @change="getAddressData($event, 'district')"
+                        ></v-select>
+                        <v-textarea
+                          ref="introduction"
+                          id="introduction"
+                          label="个人介绍"
+                          name="introduction"
+                          prepend-icon="info"
+                          :rules="[() => !!introduction || '请填写您的个人介绍']"
+                          clearable
+                          clear-icon="cancel"
+                          v-model="introduction"
+                          hint="输入您的个人介绍"
+                        ></v-textarea>
+                        <v-row class="mt-2">
+                          <v-btn color="success" class="ml-3" @click="e1 = 2">Back</v-btn>
+                          <div class="flex-grow-1"></div>
+                          <v-slide-x-reverse-transition>
+                            <v-tooltip v-if="formHasErrors" left>
+                              <template v-slot:activator="{ on }">
+                                <v-btn icon class="my-0" @click="resetForm" v-on="on">
+                                  <v-icon>mdi-refresh</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>重新输入</span>
+                            </v-tooltip>
+                          </v-slide-x-reverse-transition>
+                          <v-btn
+                            color="info light"
+                            :fab="fab"
+                            class="mr-3"
+                            @click="register"
+                            :loading="loading4"
+                          >Submit</v-btn>
+                        </v-row>
+                      </v-stepper-content>
+                    </v-form>
+                  </v-stepper-items>
+                </v-stepper>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <Footer />
+      </v-content>
+    </v-app>
 </template>
 
 <script>
@@ -323,6 +305,9 @@ export default {
       loadingSecond: 60,
       disabled: false
     }
+  },
+  props: {
+    
   },
   components: {
     Footer
@@ -401,10 +386,10 @@ export default {
         showClose: true,
         timeout: 800
       })
-      // 跳转到主页
+      // 跳转到登录
       setTimeout(() => {
         this.loading4 = false
-        this.$router.push('/')
+        this.$router.push('/login')
       }, 1000)
     },
     register () {

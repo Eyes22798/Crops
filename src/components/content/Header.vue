@@ -1,7 +1,16 @@
 <template>
   <div id="Header">
     <v-card>
-      <v-app-bar app flat fixed id="app-bar" :color="color">
+      <v-app-bar
+       app
+       flat
+       fixed
+       id="app-bar"
+       :color="color"
+       :absolute="absolute"
+       :elevate-on-scroll="false"
+       :elevation="elevation"
+       >
         <div class="flex-grow-1"></div>
         <v-toolbar-title :class="classObject" class="title" :style="{cursor: 'pointer'}">
           <router-link :to="{path: '/'}" tag="div">Crops</router-link>
@@ -28,10 +37,10 @@
              :nudge-bottom="50"
             >
               <template v-slot:activator="{ on }">
-                <v-avatar v-on="on">
+                <v-avatar v-on="on" color="grey">
                   <img
-                   src="https://cdn.vuetifyjs.com/images/john.jpg"
-                   alt="John"
+                   :src="src"
+                   alt="avatar"
                    :style="{cursor: 'pointer'}"
                   >
                 </v-avatar>
@@ -58,11 +67,14 @@ import * as types from '@/store/global/mutation-types'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'Header',
+  props: ['absolute'],
   data: () => ({
     phone: 12345679,
+    src: null,
     titles: ['国际', '国内', '病害', '虫害', '植保知识', '产品', '资讯'],
     color: null,
     isActive: false,
+    elevation: 0,
     items: [
       {
         title: '个人设置',
@@ -100,6 +112,7 @@ export default {
       console.log('用户数据为空')
     }
     this.phone = this.userInfo.phone
+    this.src = this.userInfo.photo
   },
   mounted () {
     window.addEventListener('scroll', this.handleScroll)
@@ -131,6 +144,7 @@ export default {
     },
     setUserInfo () {
       console.log('我是个人设置')
+      this.$router.push('/userInfo')
     },
     setAccount () {
       console.log('我是账号设置')
@@ -139,6 +153,7 @@ export default {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.isActive = scrollTop > 0
       this.color = scrollTop > 0 ? 'white' : null
+      this.elevation = scrollTop > 0 ? 6 : 0
     },
     handleClick (title) {
       const funObj = {

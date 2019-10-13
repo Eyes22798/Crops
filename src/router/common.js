@@ -27,6 +27,15 @@ const COMMON_ROUTER = [{
   component: () => import(/* webpackChunkName: "Register" */ '@/views/register/Register.vue')
 },
 {
+  path: '/userInfo',
+  name: 'UserInfo',
+  meta: {
+    title: '我的主页',
+    requireAuth: true
+  },
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/user/userInfo/UserInfo.vue')
+},
+{
   path: '/404',
   name: '404',
   meta: {
