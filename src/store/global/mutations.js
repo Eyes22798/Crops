@@ -14,6 +14,20 @@ const mutations = {
   [types.REMOVE_USERINFO] (state) {
     state.userInfo = ''
     stroage.local.set('userInfo', state.userInfo)
+  },
+  [types.SET_REGISTER_LOGIN] (state, data) {
+    try {
+      state.namePassword = data
+    } catch (err) {
+      console.log(`保存账户密码失败，${err}`)
+    }
+  },
+  [types.REMOVE_REGISTER_LOGIN] (state) {
+    try {
+      state.namePassword = ''
+    } catch (err) {
+      console.log(`清除账户密码失败，${err}`)
+    }
   }
 }
 

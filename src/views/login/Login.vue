@@ -77,13 +77,12 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="4" lg="4">
-                      <v-btn
-                        :loading="loading3"
-                        :disabled="disabled"
-                        color="info"
-                        class="mt-3 px-10 white--text float-right"
-                        @click="loader = 'loading3';getSendCode()"
-                      >{{ loadingText }}</v-btn>
+                      <LoadingBtn
+                       :btnText="loadingText"
+                       :color="color"
+                       :phone="username"
+                       :class="classStyle"
+                      />
                     </v-col>
                   </v-row>
                 </v-form>
@@ -135,9 +134,10 @@
 
 <script>
 import Footer from '@/components/content/Footer.vue'
+import LoadingBtn from '@/components/common/LoadingBtn'
 import * as types from '@/store/global/mutation-types'
 import { phoneRex } from '@/common/const.js'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'Login',
@@ -150,12 +150,9 @@ export default {
       source: null,
       show: false,
       clearable: true,
-      loader: null,
-      loading3: false,
       loading4: false,
+      color: 'success',
       loadingText: '验证码',
-      loadingSecond: 60,
-      disabled: false,
       gradient: true,
       usernameHint: '请输入您的手机号',
       rules: {
@@ -176,31 +173,30 @@ export default {
             }
           }
         ]
-      }
+      },
+      classStyle: 'mt-3 px-10 white--text float-right'
     }
   },
-  watch: {
-    loader () {
-      const l = this.loader
-      this.disabled = true
-      this[l] = !this[l]
-      setTimeout(() => {
-        this[l] = false
-        this.loadingText = `重发(${this.loadingSecond}s)`
-        this.flashText()
-      }, 1000)
-      this.loader = null
-    }
+  computed: {
+    ...mapGetters([
+      'namePassword'
+    ])
   },
   components: {
+    LoadingBtn,
     Footer
   },
   mounted () {
     this.toggle()
+    if (this.namePassword) {
+      this.username = this.namePassword.phone
+      this.password = this.namePassword.password
+    }
   },
   methods: {
     ...mapMutations({
-      setUserInfoData: types.SET_USERINFO
+      setUserInfoData: types.SET_USERINFO,
+      removeNamePassword: types.REMOVE_REGISTER_LOGIN
     }),
     login () {
       // 打开 btn loading 动画
@@ -230,6 +226,7 @@ export default {
                 showClose: true,
                 timeout: 800
               })
+              this.removeNamePassword()
               setTimeout(() => {
                 this.loading4 = false
                 this.$router.push('/')
@@ -256,6 +253,7 @@ export default {
                 showClose: true,
                 timeout: 800
               })
+              this.removeNamePassword()
               setTimeout(() => {
                 this.loading4 = false
                 this.$router.push('/')
@@ -268,23 +266,6 @@ export default {
           })
       }
     },
-    getSendCode () {
-      this.$api.common
-        .loginSendCode({
-          phone: this.username
-        })
-        .then(res => {
-          if (res.code === 200) {
-            this.$toast('短信已发送!', {
-              x: 'right',
-              y: 'top',
-              icon: 'info',
-              dismissable: false,
-              showClose: true
-            })
-          }
-        })
-    },
     toggle () {
       this.toggleTag = !this.toggleTag
       if (this.toggleTag) {
@@ -296,59 +277,12 @@ export default {
     addressCheck () {
       this.errorMessages = this.address && !this.name ? '😕! 我是必需的' : ''
       return true
-    },
-    flashText () {
-      let number = this.loadingSecond - 1
-      let nIntervId = setInterval(() => {
-        this.loadingText = `重发(${number--}s)`
-        if (number < 0) {
-          clearInterval(nIntervId)
-          this.loadingText = '重新获得'
-          this.disabled = false
-        }
-      }, 1000)
     }
   }
 }
 </script>
 
 <style>
-.custom-loader {
-  animation: loader 1s infinite;
-  display: flex;
-}
-@-moz-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-webkit-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@-o-keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 .split-bg {
   height: 55%;
   width: 100%;

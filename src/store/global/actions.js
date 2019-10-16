@@ -7,5 +7,11 @@ export default {
   },
   removeUserInfoData ({ commit }) {
     commit(types.REMOVE_USERINFO)
+  },
+  setNamePassword ({ commit }, param) {
+    commit(types.SET_REGISTER_LOGIN, param)
+  },
+  removeNamePassword ({ commit }, param) {
+    commit(types.REMOVE_REGISTER_LOGIN, param)
   }
 }

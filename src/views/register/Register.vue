@@ -93,13 +93,13 @@
                             ></v-text-field>
                           </v-col>
                           <v-col cols="4" lg="4">
-                            <v-btn
-                              :loading="loading3"
-                              :disabled="disabled"
-                              color="info"
-                              class="mt-3 px-10 white--text float-right"
-                              @click="loader = 'loading3';getSendCode(phone)"
-                            >{{ loadingText }}</v-btn>
+                            <LoadingBtn
+                              :btnText="loadingText"
+                              :color="color"
+                              :phone="phone"
+                              :class="classStyle"
+                              v-on:phoneMetaFun="phoneMetaFun"
+                            />
                           </v-col>
                         </v-row>
                         <v-row class="mt-2">
@@ -236,6 +236,7 @@
 
 <script>
 import Footer from '@/components/content/Footer.vue'
+import LoadingBtn from '@/components/common/LoadingBtn'
 import { phoneRex, usernameRex, passwordstrongRex, emailRex, nameRex } from '@/common/const.js'
 import * as types from '@/store/global/mutation-types'
 import { mapMutations } from 'vuex'
@@ -298,18 +299,14 @@ export default {
       altLabels: true,
       chips: true,
       fab: false,
-      loader: null,
-      loading3: false,
       loading4: false,
       loadingText: '验证手机号',
-      loadingSecond: 60,
-      disabled: false
+      classStyle: 'mt-3 px-10 white--text float-right',
+      color: 'success'
     }
   },
-  props: {
-    
-  },
   components: {
+    LoadingBtn,
     Footer
   },
   mounted () {
@@ -342,17 +339,6 @@ export default {
     }
   },
   watch: {
-    loader () {
-      const l = this.loader
-      this.disabled = true
-      this[l] = !this[l]
-      setTimeout(() => {
-        this[l] = false
-        this.loadingText = `重新验证(${this.loadingSecond}s)`
-        this.flashText()
-      }, 1000)
-      this.loader = null
-    },
     province () {
       this.cities = []
       this.districts = []
@@ -363,7 +349,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setUserInfoData: types.SET_USERINFO
+      setUserInfoData: types.SET_USERINFO,
+      setNamePassword: types.SET_REGISTER_LOGIN
     }),
     registerSet (state) {
       console.log(state)
@@ -456,6 +443,10 @@ export default {
           .then(res => {
             if (res.code === 200) {
               this.registerSet(1)
+              this.setNamePassword({
+                phone: this.phone,
+                password: this.password
+              })
             }
             setTimeout(() => {
               this.loading4 = false
@@ -480,22 +471,15 @@ export default {
           .then(res => {
             if (res.code === 200) {
               this.registerSet(0)
+              this.setNamePassword({
+                phone: this.phone,
+                password: this.password
+              })
             }
           })
       }
       setTimeout(() => {
         this.loading4 = false
-      }, 1000)
-    },
-    flashText () {
-      let number = this.loadingSecond - 1
-      let nIntervId = setInterval(() => {
-        this.loadingText = `重新验证(${number--}s)`
-        if (number < 0) {
-          clearInterval(nIntervId)
-          this.loadingText = '重新验证'
-          this.disabled = false
-        }
       }, 1000)
     },
     resetForm () {
@@ -504,47 +488,6 @@ export default {
       Object.keys(this.form).forEach(f => {
         this.$refs[f].reset()
       })
-    },
-    getSendCode ($event) {
-      if ($event === null) {
-        this.loader = null
-        this.$toast('手机号为空!', {
-          x: 'right',
-          y: 'top',
-          icon: 'error',
-          dismissable: false,
-          showClose: true,
-          timeout: 800
-        })
-      } else if (!phoneRex.test($event)) {
-        this.loader = null
-        this.$toast('请输入正确的手机号!', {
-          x: 'right',
-          y: 'top',
-          icon: 'info',
-          dismissable: false,
-          showClose: true,
-          timeout: 800
-        })
-      } else {
-        this.$api.common
-          .registerSendCode({
-            phone: this.phone
-          })
-          .then(res => {
-            if (res.code === 200) {
-              this.$toast('短信已发送!', {
-                x: 'right',
-                y: 'top',
-                icon: 'info',
-                dismissable: false,
-                showClose: true,
-                timeout: 800
-              })
-              this.phoneMeta = true
-            }
-          })
-      }
     },
     getAddressDataInfo (name, data) {
       data.some(item => {
@@ -589,6 +532,9 @@ export default {
           }
         })
       }
+    },
+    phoneMetaFun (value) {
+      this.phoneMeta = value
     }
   }
 }

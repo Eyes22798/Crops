@@ -190,7 +190,9 @@ export default {
           text: '我的上传',
           icon: 'folder'
         }
-      ]
+      ],
+      loadingText: '验证码',
+      color: 'success'
     }
   },
   mounted () {
@@ -207,6 +209,11 @@ export default {
     Header,
     Footer,
     MaterialCard
+  },
+  methods: {
+    test () {
+      console.log(11)
+    }
   }
 }
 </script>

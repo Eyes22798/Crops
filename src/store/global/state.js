@@ -15,8 +15,11 @@ if (cookie && !local.get('JSESSIONID')) {
   local.set('JSESSIONID', cookie)
   sessionID = local.get('JSESSIONID')
 }
+// 从注册到登录信息
+const namePassword = null
 
 export default {
+  namePassword,
   userInfo,
   sessionID
 }
