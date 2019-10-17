@@ -44,7 +44,6 @@
                                        :value="formData.name"
                                       />
                                     </v-col>
-
                                     <v-col cols="12" md="6">
                                       <v-text-field
                                        label="用户名"
@@ -52,7 +51,6 @@
                                        :value="formData.nickname"
                                       />
                                     </v-col>
-
                                     <v-col cols="12" md="6">
                                       <v-text-field
                                        label="邮箱"
@@ -60,7 +58,6 @@
                                        :value="formData.email"
                                       />
                                     </v-col>
-
                                     <v-col cols="12" md="6">
                                       <v-text-field
                                         class="purple-input"
@@ -69,31 +66,9 @@
                                         :value="formData.postcode"
                                       />
                                     </v-col>
-
-                                    <v-col cols="12" md="4">
-                                      <v-select
-                                       label="省"
-                                       class="purple-input"
-                                      >
-                                      </v-select>
+                                    <v-col cols="12" md="12">
+                                      <Distpicker />
                                     </v-col>
-
-                                    <v-col cols="12" md="4">
-                                      <v-select
-                                       label="市"
-                                       class="purple-input"
-                                      >
-                                      </v-select>
-                                    </v-col>
-
-                                    <v-col cols="12" md="4">
-                                      <v-select
-                                       label="县"
-                                       class="purple-input"
-                                      >
-                                      </v-select>
-                                    </v-col>
-
                                     <v-col cols="12">
                                       <v-textarea
                                         class="purple-input"
@@ -101,7 +76,6 @@
                                         value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                                       />
                                     </v-col>
-
                                     <v-col cols="12" class="text-right">
                                       <v-btn color="success">Update Profile</v-btn>
                                     </v-col>
@@ -153,6 +127,7 @@
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
 import MaterialCard from '@/components/common/MaterialCard.vue'
+import Distpicker from '@/components/common/Distpicker.vue'
 export default {
   name: 'UserInfo',
   data () {
@@ -208,7 +183,8 @@ export default {
   components: {
     Header,
     Footer,
-    MaterialCard
+    MaterialCard,
+    Distpicker
   },
   methods: {
     test () {

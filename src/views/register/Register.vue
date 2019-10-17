@@ -150,7 +150,6 @@
                           hint="请输入正确的邮政编码"
                         ></v-text-field>
                         <v-select
-                          ref="province"
                           id="province"
                           label="省"
                           name="province"
@@ -163,7 +162,6 @@
                           @change="getAddressData($event, 'province')"
                         ></v-select>
                         <v-select
-                          ref="city"
                           id="city"
                           label="市"
                           name="city"
@@ -240,6 +238,7 @@ import LoadingBtn from '@/components/common/LoadingBtn'
 import { phoneRex, usernameRex, passwordstrongRex, emailRex, nameRex } from '@/common/const.js'
 import * as types from '@/store/global/mutation-types'
 import { mapMutations } from 'vuex'
+import Distpicker from '@/components/common/Distpicker.vue'
 
 export default {
   name: 'Register',
@@ -307,6 +306,7 @@ export default {
   },
   components: {
     LoadingBtn,
+    Distpicker,
     Footer
   },
   mounted () {
@@ -332,9 +332,7 @@ export default {
         email: this.email,
         postcode: this.postcode,
         address: this.address,
-        introduction: this.introduction,
-        province: this.province,
-        city: this.city
+        introduction: this.introduction
       }
     }
   },
@@ -421,7 +419,8 @@ export default {
           icon: 'info',
           color: 'error',
           dismissable: false,
-          showClose: true
+          showClose: true,
+          timeout: 800
         })
       }
       // 判断 用户类别 (表单提交完全正确的情况)

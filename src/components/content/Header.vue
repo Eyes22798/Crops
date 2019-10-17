@@ -139,6 +139,9 @@ export default {
               timeout: 800
             })
             this.removeUserInfoData()
+            if (this.$route.path !== '/') {
+              this.$router.push('/')
+            }
           }
         })
     },
