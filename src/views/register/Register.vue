@@ -149,43 +149,12 @@
                           v-model="postcode"
                           hint="请输入正确的邮政编码"
                         ></v-text-field>
-                        <v-select
-                          id="province"
-                          label="省"
-                          name="province"
-                          prepend-icon="map"
-                          :rules="[() => !!province || '请选择您的省份']"
-                          :items="provinces"
-                          :clearable="clearable"
-                          :chips="chips"
-                          v-model="province"
-                          @change="getAddressData($event, 'province')"
-                        ></v-select>
-                        <v-select
-                          id="city"
-                          label="市"
-                          name="city"
-                          prepend-icon="map"
-                          :rules="[() => !!city || '请选择您的市/县']"
-                          :items="cities"
-                          :clearable="clearable"
-                          :chips="chips"
-                          v-model="city"
-                          @change="getAddressData($event, 'city')"
-                        ></v-select>
-                        <v-select
-                          ref="address"
-                          id="address"
-                          label="县"
-                          name="address"
-                          prepend-icon="map"
-                          :rules="[() => !!address || '请选择您的县/区']"
-                          :items="districts"
-                          :clearable="clearable"
-                          :chips="chips"
-                          v-model="address"
-                          @change="getAddressData($event, 'district')"
-                        ></v-select>
+                        <Distpicker
+                         :row="3"
+                         prependIcon="map"
+                         :clearable="true"
+                         ref="distpicker"
+                        />
                         <v-textarea
                           ref="introduction"
                           id="introduction"
@@ -248,20 +217,14 @@ export default {
       password: null,
       password2: null,
       phone: null,
+      role: '3',
       name: null,
       email: null,
       postcode: null,
-      address: null,
-      introduction: null,
-      role: '3',
       province: null,
       city: null,
-      provinceData: undefined,
-      cityData: undefined,
-      districtData: undefined,
-      provinces: [],
-      cities: [],
-      districts: [],
+      address: null,
+      introduction: null,
       formHasErrors: false,
       formKey: true,
       phoneMeta: false,
@@ -296,7 +259,6 @@ export default {
       show: false,
       clearable: true,
       altLabels: true,
-      chips: true,
       fab: false,
       loading4: false,
       loadingText: '验证手机号',
@@ -309,18 +271,6 @@ export default {
     Distpicker,
     Footer
   },
-  mounted () {
-    this.$api.common
-      .linkAge()
-      .then(res => {
-        if (res.code === 200) {
-          res.data.forEach(item => {
-            this.provinces.push(item.name)
-          })
-          this.provinceData = res.data
-        }
-      })
-  },
   computed: {
     form () {
       return {
@@ -331,18 +281,11 @@ export default {
         name: this.name,
         email: this.email,
         postcode: this.postcode,
+        province: this.province,
+        city: this.city,
         address: this.address,
         introduction: this.introduction
       }
-    }
-  },
-  watch: {
-    province () {
-      this.cities = []
-      this.districts = []
-    },
-    city () {
-      this.districts = []
     }
   },
   methods: {
@@ -407,6 +350,10 @@ export default {
         if (!this.form[f]) {
           this.formHasErrors = true
           this.formKey = false
+        }
+        if (!this.$refs[f]) {
+          this.$refs['distpicker'].$refs[`${f}`].validate(true)
+          return
         }
         this.$refs[f].validate(true)
       })
@@ -485,52 +432,12 @@ export default {
       this.errorMessages = []
       this.formHasErrors = false
       Object.keys(this.form).forEach(f => {
+        if (!this.$refs[f]) {
+          this.$refs['distpicker'].$refs[`${f}`].reset()
+          return
+        }
         this.$refs[f].reset()
       })
-    },
-    getAddressDataInfo (name, data) {
-      data.some(item => {
-        // 根据所选地区名称发起请求得到数据
-        if (item.name === name) {
-          this.$api.common
-            .linkAge(item.level, item.id)
-            .then(res => {
-              // 如果是 city 的数据渲染到 city 数组中
-              if (item.level - 0 === 1) {
-                this.cityData = res.data
-                res.data.forEach(city => {
-                  this.cities.push(city.name)
-                })
-              // 如果是 districts 的数据渲染到 districts 数组中
-              } else if (item.level - 0 === 2) {
-                this.districtData = res.data
-                res.data.forEach(district => {
-                  this.districts.push(district.name)
-                })
-              }
-            })
-          return true
-        }
-      })
-    },
-    getAddressData ($event, str) {
-      let data
-      if (str === 'province') {
-        data = this.provinceData
-        this.getAddressDataInfo($event, data)
-      } else if (str === 'city') {
-        data = this.cityData
-        this.getAddressDataInfo($event, data)
-      } else {
-        // 找到最后所选地区的 id
-        this.districtData.some(item => {
-          if (item.name === $event) {
-            this.address = item.id
-            console.log('联动完成')
-            return true
-          }
-        })
-      }
     },
     phoneMetaFun (value) {
       this.phoneMeta = value

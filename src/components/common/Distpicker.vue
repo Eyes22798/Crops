@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12" md="4">
+      <v-col cols="12" :md="md">
         <v-select
           ref="province"
           id="province"
           label="省"
           name="province"
+          :prepend-icon="prependIcon"
+          :clearable="clearable"
           :rules="[() => !!province || '请选择您的省份']"
           :items="provinces"
           :chips="chips"
@@ -14,12 +16,14 @@
           @change="getAddressData($event, 'province')"
         ></v-select>
       </v-col>
-      <v-col cols="12" md="4">
+      <v-col cols="12" :md="md">
         <v-select
           ref="city"
           id="city"
           label="市"
           name="city"
+          :prepend-icon="prependIcon"
+          :clearable="clearable"
           :rules="[() => !!city || '请选择您的市/县']"
           :items="cities"
           :chips="chips"
@@ -27,12 +31,14 @@
           @change="getAddressData($event, 'city')"
         ></v-select>
       </v-col>
-      <v-col cols="12" md="4">
+      <v-col cols="12" :md="md">
         <v-select
           ref="address"
           id="address"
           label="县"
           name="address"
+          :prepend-icon="prependIcon"
+          :clearable="clearable"
           :rules="[() => !!address || '请选择您的县/区']"
           :items="districts"
           :chips="chips"
@@ -54,6 +60,10 @@ export default {
     clearable: {
       type: Boolean,
       default: true
+    },
+    row: {
+      type: Number,
+      default: 1
     }
   },
   data () {
@@ -68,6 +78,11 @@ export default {
       provinceData: undefined,
       cityData: undefined,
       districtData: undefined
+    }
+  },
+  computed: {
+    md () {
+      return this.row === 3 ? 12 : 4
     }
   },
   watch: {

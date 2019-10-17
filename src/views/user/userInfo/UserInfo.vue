@@ -67,7 +67,9 @@
                                       />
                                     </v-col>
                                     <v-col cols="12" md="12">
-                                      <Distpicker />
+                                      <Distpicker
+                                       :row="1"
+                                      />
                                     </v-col>
                                     <v-col cols="12">
                                       <v-textarea
