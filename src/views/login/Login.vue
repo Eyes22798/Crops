@@ -145,6 +145,9 @@ export default {
     return {
       username: null,
       password: null,
+      provinceName: null,
+      cityName: null,
+      addressName: null,
       code: null,
       toggleTag: true,
       source: null,
@@ -191,6 +194,9 @@ export default {
     if (this.namePassword) {
       this.username = this.namePassword.phone
       this.password = this.namePassword.password
+      this.provinceName = this.namePassword.provinceName
+      this.cityName = this.namePassword.cityName
+      this.addressName = this.namePassword.addressName
     }
   },
   methods: {
@@ -217,7 +223,19 @@ export default {
           .then(res => {
             if (res.code === 200) {
               // 把用户的基本信息存储到 localStorage 中
-              this.setUserInfoData(res.data)
+              this.setUserInfoData(Object.assign(
+                {},
+                res.data,
+                {
+                  provinceName: this.provinceName
+                },
+                {
+                  cityName: this.cityName
+                },
+                {
+                  addressName: this.addressName
+                }
+              ))
               this.$toast('登录成功!', {
                 x: 'right',
                 y: 'top',

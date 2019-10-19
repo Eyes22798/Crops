@@ -154,6 +154,9 @@
                          prependIcon="map"
                          :clearable="true"
                          ref="distpicker"
+                         v-on:provinceFun="provinceFun"
+                         v-on:cityFun="cityFun"
+                         v-on:addressFun="addressFun"
                         />
                         <v-textarea
                           ref="introduction"
@@ -225,6 +228,7 @@ export default {
       city: null,
       address: null,
       introduction: null,
+      addressName: null,
       formHasErrors: false,
       formKey: true,
       phoneMeta: false,
@@ -294,7 +298,6 @@ export default {
       setNamePassword: types.SET_REGISTER_LOGIN
     }),
     registerSet (state) {
-      console.log(state)
       // 把用户信息存到 localStorage 中
       this.setUserInfoData(Object.assign(
         {},
@@ -304,6 +307,9 @@ export default {
         },
         {
           role: this.role - 0
+        },
+        {
+          addressName: this.addressName
         }
       ))
       this.$toast('注册成功!', {
@@ -391,7 +397,10 @@ export default {
               this.registerSet(1)
               this.setNamePassword({
                 phone: this.phone,
-                password: this.password
+                password: this.password,
+                provinceName: this.province,
+                cityName: this.city,
+                addressName: this.addressName
               })
             }
             setTimeout(() => {
@@ -399,7 +408,6 @@ export default {
             }, 1000)
           })
       } else if (this.role === '2' && this.formKey) {
-        this.loading4 = false
         console.log('我是专家用户')
         this.$api.common
           .expertRegister({
@@ -419,7 +427,10 @@ export default {
               this.registerSet(0)
               this.setNamePassword({
                 phone: this.phone,
-                password: this.password
+                password: this.password,
+                provinceName: this.province,
+                cityName: this.city,
+                addressName: this.addressName
               })
             }
           })
@@ -441,6 +452,16 @@ export default {
     },
     phoneMetaFun (value) {
       this.phoneMeta = value
+    },
+    provinceFun (value) {
+      this.province = value
+    },
+    cityFun (value) {
+      this.city = value
+    },
+    addressFun (value) {
+      this.addressName = value[0]
+      this.address = value[1]
     }
   }
 }

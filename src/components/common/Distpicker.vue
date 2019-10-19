@@ -145,6 +145,12 @@ export default {
         this.districtData.some(item => {
           if (item.name === $event) {
             this.address = item.id
+            this.$emit('provinceFun', this.province)
+            this.$emit('cityFun', this.city)
+            this.$emit('addressFun', [
+              $event,
+              item.id
+            ])
             console.log('联动完成')
             return true
           }
