@@ -9,7 +9,7 @@ export default {
   baseURL: URL,
   // 请求头信息
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
   },
   // 设置超时时间
   timeout: 5000,

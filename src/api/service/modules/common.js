@@ -82,7 +82,7 @@ const common = {
     return $axios({
       url: '/common/user/modify',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 修改密码
@@ -128,10 +128,11 @@ const common = {
   // 头像修改
   updateAvatar (formData) {
     return $axios({
-      url: '/common/user/photo',
+      url: '/common/user/modifyphoto',
       method: 'post',
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data;charset=UTF-8',
+        'AuthorizationPhoto': 'updatePhoto'
       },
       data: formData
     })
