@@ -90,15 +90,14 @@ const common = {
     return $axios({
       url: '/common/user/password',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 验证电话号码
-  phoneSendCode (params) {
+  phoneSendCode (phone) {
     return $axios({
-      url: '/common/changephone/sendcode',
-      method: 'post',
-      data: qs.stringify(params)
+      url: `/common/changephone/sendcode?phone=${phone}`,
+      method: 'get'
     })
   },
   // 验证新的电话号码
@@ -106,7 +105,7 @@ const common = {
     return $axios({
       url: '/common/modifyphone/sendcode',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 验证验证码
@@ -114,7 +113,7 @@ const common = {
     return $axios({
       url: '/common/phone/verification',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 绑定电话修改
@@ -122,7 +121,7 @@ const common = {
     return $axios({
       url: '/common/user/phone',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 头像修改
