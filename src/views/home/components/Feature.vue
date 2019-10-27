@@ -6,7 +6,7 @@
           <v-card elevation="24" class="mt-n10">
             <v-container>
               <v-row justify="center">
-                <v-col cols="4" v-for="(item, index) in feature" :key="index">
+                <v-col cols="12" md="4" sm="12" v-for="(item, index) in feature" :key="index">
                   <v-card class="mx-auto" max-width="400">
                     <v-img
                       class="white--text"
@@ -29,15 +29,21 @@
                       </div>
                     </v-card-text>
                     <v-card-actions class="justify-center mt-n6">
-                      <v-btn  v-if="index === 0" class="ma-2" tile outlined block color="success">
-                        <v-icon left>fingerprint</v-icon> 点击进入
-                      </v-btn>
-                      <v-btn v-else-if="index === 1" class="ma-2" tile outlined block color="red">
-                        <v-icon left>fingerprint</v-icon> 点击进入
-                      </v-btn>
-                      <v-btn  v-else class="ma-2" tile outlined block color="orange">
-                        <v-icon left>fingerprint</v-icon> 点击进入
-                      </v-btn>
+                      <router-link :to="{path: '/plant'}" tag="div" class="fluid" v-if="index === 0" >
+                        <v-btn class="my-2" tile outlined block color="success">
+                          <v-icon left>fingerprint</v-icon> 点击进入
+                        </v-btn>
+                      </router-link>
+                      <router-link :to="{path: '/enemy'}" tag="div" class="fluid" v-else-if="index === 1">
+                        <v-btn class="my-2" tile outlined block color="red">
+                          <v-icon left>fingerprint</v-icon> 点击进入
+                        </v-btn>
+                      </router-link>
+                      <router-link :to="{path: '/disease'}" tag="div" class="fluid" v-else>
+                        <v-btn  class="my-2" tile outlined block color="orange">
+                          <v-icon left>fingerprint</v-icon> 点击进入
+                        </v-btn>
+                      </router-link>
                     </v-card-actions>
                   </v-card>
                 </v-col>
@@ -171,3 +177,9 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+  .fluid
+    width 100% !important
+
+</style>

@@ -36,6 +36,33 @@ const COMMON_ROUTER = [{
   component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/user/userInfo/UserInfo.vue')
 },
 {
+  path: '/plant',
+  name: 'Plant',
+  meta: {
+    title: '作物检索',
+    requireAuth: true
+  },
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/plant/Plant.vue')
+},
+{
+  path: '/enemy',
+  name: 'Enemy',
+  meta: {
+    title: '天敌检索',
+    requireAuth: true
+  },
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/enemy/Enemy.vue')
+},
+{
+  path: '/disease',
+  name: 'Disease',
+  meta: {
+    title: '胁迫检索',
+    requireAuth: true
+  },
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/disease/Disease.vue')
+},
+{
   path: '/404',
   name: '404',
   meta: {

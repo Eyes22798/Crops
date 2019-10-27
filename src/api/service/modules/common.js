@@ -137,11 +137,10 @@ const common = {
     })
   },
   // 作物信息检索
-  getPlantByName (params) {
+  getPlantByName (name = '玫瑰', pageNum = 1, pageSize = 3) {
     return $axios({
-      url: '/common/plant/foundbyname',
-      method: 'post',
-      data: qs.stringify(params)
+      url: `/common/plant/foundbyname?name=${name}&pageNum=${pageNum}&pageSize=${pageSize}`,
+      method: 'get'
     })
   },
   // 显示作物的详细信息

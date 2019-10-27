@@ -26,12 +26,20 @@
           v-else
           class="px-3"
         >
+          <v-row>
+            <v-icon
+           size="40"
+           class="mx-2"
+          >
+            {{ icon }}
+          </v-icon>
           <h4
-            class="title font-weight-light mb-2"
+            class="title font-weight-light mt-1"
             v-text="title"
           />
+          </v-row>
           <p
-            class="category font-weight-thin mb-0"
+            class="caption font-weight-thin mb-0"
             v-text="text"
           />
         </div>
@@ -70,6 +78,10 @@ export default {
     color: {
       type: String,
       default: 'secondary'
+    },
+    icon: {
+      type: String,
+      required: false
     },
     elevation: {
       type: [Number, String],
