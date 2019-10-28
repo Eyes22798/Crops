@@ -17,9 +17,12 @@ if (cookie && !local.get('JSESSIONID')) {
 }
 // 从注册到登录信息
 const namePassword = null
+// 分页 name 属性
+const pageName = null
 
 export default {
   namePassword,
   userInfo,
-  sessionID
+  sessionID,
+  pageName
 }

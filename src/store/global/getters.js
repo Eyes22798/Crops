@@ -2,7 +2,8 @@
 const getters = {
   userData: (state) => state.userInfo,
   sessionID: (state) => state.sessionID,
-  namePassword: (state) => state.namePassword
+  namePassword: (state) => state.namePassword,
+  pageName: (state) => state.pageName
 }
 
 export default getters

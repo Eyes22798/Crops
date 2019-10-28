@@ -19,9 +19,17 @@
         min-height="80"
       >
         <slot
-          v-if="!title && !text"
+          v-if="!title && !text && !icon"
           name="header"
         />
+        <v-flex v-else-if="icon && !title && !text" class="justify-center text-center">
+            <v-icon
+           size="40"
+          >
+            {{ icon }}
+          </v-icon>
+          <p>{{ iconText }}</p>
+        </v-flex>
         <div
           v-else
           class="px-3"
@@ -43,6 +51,7 @@
             v-text="text"
           />
         </div>
+
       </v-card>
 
       <slot
@@ -81,7 +90,11 @@ export default {
     },
     icon: {
       type: String,
-      required: false
+      default: undefined
+    },
+    iconText: {
+      type: String,
+      default: undefined
     },
     elevation: {
       type: [Number, String],
@@ -113,7 +126,8 @@ export default {
       return this.$slots.header ||
         this.$slots.offset ||
         this.title ||
-        this.text
+        this.text ||
+        this.icon
     },
     styles () {
       if (!this.hasOffset) return null

@@ -30,5 +30,5 @@ export default {
 
 <style lang="stylus" scoped>
   #plant
-    min-height 1000px
+    min-height 600px
 </style>

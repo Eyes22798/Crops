@@ -13,5 +13,8 @@ export default {
   },
   removeNamePassword ({ commit }, param) {
     commit(types.REMOVE_REGISTER_LOGIN, param)
+  },
+  setPageName ({ commit }, param) {
+    commit(types.SET_PAGENAME, param)
   }
 }

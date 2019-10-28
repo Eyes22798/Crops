@@ -184,6 +184,10 @@ export default function $axios (options) {
           delCookie('JSESSIONID')
           localStorage.clear()
           routerToObj('login')
+        } else if (data.code === 500) {
+          setTimeout(() => {
+            routerToObj('500')
+          })
         }
         responseError.message = errorHandle(data.code, response.data.message)
         // 3. 错误 => 显示错误消息 || 正常 => 结束 Nprogress 动画
