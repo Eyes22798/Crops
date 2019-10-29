@@ -25,106 +25,112 @@
                       primary-title
                     >{{ list.chinesename }}</v-card-title>
 
-                    <v-img
-                      src="https://picsum.photos/id/11/500/300"
-                      lazy-src="https://picsum.photos/id/11/10/6"
-                      aspect-ratio="1"
-                      class="grey lighten-2"
-                      contain
-                      max-height="400"
-                    ></v-img>
+                    <v-row justify="center">
+                      <v-col cols="12">
+                        <v-card elevation="24">
+                          <v-system-bar lights-out></v-system-bar>
+                          <v-carousel
+                            :continuous="false"
+                            cycle
+                            :show-arrows="false"
+                            hide-delimiter-background
+                            delimiter-icon="mdi-minus"
+                            height="300"
+                          >
+                            <v-carousel-item v-for="(slide, i) in imageFile" :key="i">
+                              <v-parallax :src="slide.imagefile">
+                                <v-row class="fill-height" align="center" justify="center">
+                                  <div class="display-3 mt-n12">{{ slide.name }}</div>
+                                </v-row>
+                              </v-parallax>
+                            </v-carousel-item>
+                          </v-carousel>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                    <v-card-text>
+                      <strong class="title font-weight-bold">科属关系</strong>
+                    </v-card-text>
                     <v-card-text class="py-0">
                       <v-timeline align-top dense>
-                        <v-timeline-item color="pink" small>
+                        <v-timeline-item color="red" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory.kingdom }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Lunch break</strong>
+                              <strong>有关界的描述</strong>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
 
-                        <v-timeline-item color="teal lighten-3" small>
+                        <v-timeline-item color="orange" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory.phylum }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Design Stand Up</strong>
+                              <strong>有关门的描述</strong>
                               <div class="caption mb-2">Hangouts</div>
-                              <v-avatar>
-                                <v-img
-                                  src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Red&facialHairType=BeardLight&facialHairColor=BrownDark&clotheType=GraphicShirt&clotheColor=Gray01&graphicType=Skull&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Brown"
-                                ></v-img>
-                              </v-avatar>
-                              <v-avatar>
-                                <v-img
-                                  src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairFrizzle&accessoriesType=Prescription02&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=BlazerSweater&clotheColor=Black&eyeType=Default&eyebrowType=FlatNatural&mouthType=Default&skinColor=Tanned"
-                                ></v-img>
-                              </v-avatar>
-                              <v-avatar>
-                                <v-img
-                                  src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Sunglasses&hairColor=BlondeGolden&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Surprised&eyebrowType=RaisedExcited&mouthType=Smile&skinColor=Pale"
-                                ></v-img>
-                              </v-avatar>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
 
-                        <v-timeline-item color="pink" small>
+                        <v-timeline-item color="blue" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory._class }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Lunch break</strong>
+                              <strong>有关纲的描述</strong>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
 
-                        <v-timeline-item color="teal lighten-3" small>
+                        <v-timeline-item color="green" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory.bioOrder }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Finish Home Screen</strong>
+                              <strong>有关目的描述</strong>
                               <div class="caption">Web App</div>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
-                        <v-timeline-item color="teal lighten-3" small>
+
+                        <v-timeline-item color="yellow" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory.family }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Finish Home Screen</strong>
+                              <strong>有关科的描述</strong>
                               <div class="caption">Web App</div>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
-                        <v-timeline-item color="teal lighten-3" small>
+
+                        <v-timeline-item color="teal" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory.genus }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Finish Home Screen</strong>
+                              <strong>有关属的描述</strong>
                               <div class="caption">Web App</div>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
-                        <v-timeline-item color="teal lighten-3" small>
+
+                        <v-timeline-item color="purple" small icon="star">
                           <v-row class="pt-1">
                             <v-col cols="4">
                               <strong>{{ biologycategory.species }}</strong>
                             </v-col>
                             <v-col>
-                              <strong>Finish Home Screen</strong>
-                              <div class="caption">Web App</div>
+                              <strong>有关种的表述</strong>
+                              <div class="caption">{{ item.growthhabit }}</div>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
@@ -312,7 +318,7 @@ export default {
           this.biologycategory = {
             ...res.data.biologycategory
           }
-          this.imageFile = res.data.list[0].imagefile
+          this.imageFile = res.data.list
           console.log(this.imageFile)
         })
     }
