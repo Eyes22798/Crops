@@ -6,6 +6,7 @@ import Vuetify, {
   VBtn,
   VIcon
 } from 'vuetify/lib'
+import { Ripple } from 'vuetify/lib/directives'
 import VuetifyToast from 'vuetify-toast-snackbar'
 
 Vue.use(Vuetify, {
@@ -13,6 +14,9 @@ Vue.use(Vuetify, {
     VSnackbar,
     VBtn,
     VIcon
+  },
+  directives: {
+    Ripple
   },
   theme: {
     primary: '#ee44aa',

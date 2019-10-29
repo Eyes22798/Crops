@@ -113,14 +113,16 @@
                                 <p
                                   class="font-weight-light"
                                 >&nbsp;&nbsp;&nbsp;&nbsp;{{ formData.introduction }}</p>
-                                <v-file-input v-if="avatar" v-model="avatarImg"></v-file-input>
+                                <input type="file" id="upload" ref="upload" @change="updateAvatarData" accept=".jpg, .jpeg, .png">
                                 <v-btn
                                   color="success"
-                                  rounded
                                   v-if="avatar"
+                                  rounded
                                   :loading="loadingBtn"
-                                  @click="updateAvatarData"
-                                >上传头像</v-btn>
+                                  @click="selecAvatarImg"
+                                >
+                                  {{ uploadBtnText }}
+                                </v-btn>
                               </v-card-text>
                             </material-card>
                           </v-col>
@@ -428,7 +430,8 @@ export default {
       dialog2: false,
       dialog3: false,
       dialog4: false,
-      show: false
+      show: false,
+      uploadBtnText: '上传图片'
     }
   },
   watch: {
@@ -461,6 +464,43 @@ export default {
     MaterialCard
   },
   methods: {
+    updateAvatarData (e) {
+      this.avatarImg = e.target.files[0]
+      this.uploadBtnText = this.avatarImg.name
+      // 避免选择同一张图片 change 事件只触发一次
+      this.$refs.upload.value = null
+    },
+    uploadImg () {
+      if (!this.avatarImg) {
+        return
+      }
+      let formData = new FormData()
+      formData.append('userid', this.formData.userid)
+      formData.append('photo', this.avatarImg)
+      this.loadingBtn = true
+      this.$api.common
+        .updateAvatar(formData)
+        .then(res => {
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$toast('头像修改成功!', {
+                x: 'right',
+                y: 'top',
+                icon: 'info',
+                dismissable: false,
+                showClose: true
+              })
+              this.loadingBtn = false
+            }, 500)
+          }
+        })
+        .then(res => {
+          setTimeout(() => {
+            this.loadingBtn = false
+          }, 500)
+          this.getSessionData()
+        })
+    },
     getSessionData () {
       this.$api.common
         .getSessionData()
@@ -515,44 +555,15 @@ export default {
     updateAvatar () {
       this.avatar = !this.avatar
     },
-    updateAvatarData () {
-      let formData = new FormData()
-      formData.append('userid', this.formData.userid)
-      formData.append('photo', this.avatarImg)
-      if (!this.avatarImg) {
-        this.$toast('请选择图片!', {
-          x: 'right',
-          y: 'top',
-          icon: 'info',
-          color: 'error',
-          dismissable: false,
-          showClose: true
-        })
+    selecAvatarImg () {
+      if (this.avatarImg) {
+        this.uploadImg()
+        this.uploadBtnText = '上传图片'
+        this.avatarImg = null
         return
       }
-      this.loadingBtn = true
-      this.$api.common
-        .updateAvatar(formData)
-        .then(res => {
-          if (res.code === 200) {
-            setTimeout(() => {
-              this.$toast('头像修改成功!', {
-                x: 'right',
-                y: 'top',
-                icon: 'info',
-                dismissable: false,
-                showClose: true
-              })
-              this.loadingBtn = false
-            }, 500)
-          }
-        })
-        .then(res => {
-          setTimeout(() => {
-            this.loadingBtn = false
-          }, 500)
-          this.getSessionData()
-        })
+      let uploadbtn = this.$refs.upload
+      uploadbtn.click()
     },
     verifyPhone (phone) {
       this.$api.common
@@ -653,4 +664,8 @@ export default {
     height 1000px
     .avatar
       cursor pointer
+    #upload
+      height: 0
+      width: 0
+      visibility: hidden
 </style>
