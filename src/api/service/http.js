@@ -214,9 +214,6 @@ export default function $axios (options) {
         if (err.toString().includes('timeout')) {
           err.message = '抱歉，服务器超时，请稍后再试！'
         }
-        // 404 500 状态码跳转
-        routerToObj(`${err.response.status}`)
-        console.error(`错误消息： ${err}`)
         // 显示错误消息
         $toast(`错误: ${err.message}`, {
           x: 'right',
@@ -226,6 +223,11 @@ export default function $axios (options) {
           dismissable: false,
           showClose: true
         })
+        // 404 500 状态码跳转
+        if (err.response.status) {
+          routerToObj(`${err.response.status}`)
+        }
+        console.error(`错误消息： ${err}`)
         return Promise.reject(err) // 返回接口返回的错误信息
       }
     )
