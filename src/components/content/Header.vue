@@ -108,11 +108,10 @@ export default {
   },
   created () {
     // 如果，state 中的 userInfo 没有数据（用户没有登录）更改 view
-    if (!this.userInfo) {
-      console.log('用户数据为空')
+    if (this.userInfo) {
+      this.phone = this.userInfo.phone
+      this.src = this.userInfo.photo
     }
-    this.phone = this.userInfo.phone
-    this.src = this.userInfo.photo
   },
   mounted () {
     window.addEventListener('scroll', this.handleScroll)
@@ -146,7 +145,6 @@ export default {
         })
     },
     setUserInfo () {
-      console.log('我是个人设置')
       this.$router.push('/userInfo')
     },
     setAccount () {

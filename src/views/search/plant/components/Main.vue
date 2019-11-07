@@ -157,7 +157,7 @@
                       {{ item.latinname }}
                     </v-chip>
                   </material-card>
-                  <material-card color="info" class="mx-2 mt-n2" icon="whatshot" iconText="病害名称">
+                  <material-card color="info" class="mx-2 mt-n2" icon="whatshot" iconText="别称">
                     <v-chip outlined label>
                       <v-icon left>local_florist</v-icon>
                       {{ item.alias }}
@@ -268,6 +268,7 @@ export default {
       '属'
     ],
     imageFile: null,
+    name: '玫瑰',
     page: 1,
     pageSize: 3,
     number: null,
@@ -280,11 +281,12 @@ export default {
     ])
   },
   mounted () {
-    this.getPlantByName(this.pageName, this.page, this.pageSize)
+    this.getPlantByName(this.name, this.page, this.pageSize)
   },
   watch: {
     page () {
-      this.getPlantByName(this.pageName, this.page, this.pageSize)
+      const name = this.pageName ? this.pageName : this.name
+      this.getPlantByName(name, this.page, this.pageSize)
     },
     pageName () {
       this.getPlantByName(this.pageName, this.page = 1, this.pageSize)

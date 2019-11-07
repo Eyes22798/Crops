@@ -175,11 +175,10 @@ const common = {
     })
   },
   // 根据天敌名称检索
-  getEnemyByName (params) {
+  getEnemyByName (name = '瓢虫', pageNum = 1, pageSize = 3) {
     return $axios({
-      url: '/common/enemy/foundbyname',
-      method: 'post',
-      data: qs.stringify(params)
+      url: `/common/enemy/foundbyname?name=${name}&pageNum=${pageNum}&pageSize=${pageSize}`,
+      method: 'get'
     })
   },
   // 显示天敌详细信息
@@ -194,7 +193,7 @@ const common = {
     return $axios({
       url: '/common/enemy/foundbycate',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 根据天敌图像检索

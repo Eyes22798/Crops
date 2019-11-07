@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-parallax :src="require('@/assets/images/header2.jpg')" :height="height">
+    <v-parallax :src="img" :height="height">
       <v-spacer></v-spacer>
       <v-layout class="mt-12 mx-10">
         <v-flex>
@@ -10,7 +10,7 @@
                 <h1 class="font-weight-bold display-3 basil--text">自由开放地获取生物多样性数据</h1>
               </v-card-title>
 
-              <v-tabs v-model="tab" background-color="#559a55" grow>
+              <v-tabs v-model="tab" background-color="#559a55" grow center-active>
                 <v-tab v-for="item in items" :key="item" class="white--text">{{ item }}</v-tab>
               </v-tabs>
 
@@ -71,6 +71,15 @@ import * as types from '@/store/global/mutation-types'
 import { mapMutations } from 'vuex'
 export default {
   name: 'Parallax',
+  props: {
+    firstCategory: {
+      type: Array
+    },
+    img: {
+      type: String,
+      default: require('@/assets/images/header2.jpg')
+    }
+  },
   data: () => ({
     height: 400,
     search: null,
@@ -115,7 +124,7 @@ export default {
       },
       {
         id: 5,
-        label: '选择查找的植物',
+        label: '选择您要查找的',
         type: 'species',
         value: []
       }
@@ -125,7 +134,7 @@ export default {
   watch: {
     tab () {
       if (this.tab === 1) {
-        this.getCategory('kingdom', '植物界')
+        this.getCategory(this.firstCategory[0], this.firstCategory[1])
       }
     }
   },
@@ -173,7 +182,7 @@ export default {
         this.catgroyNumbers = map.get(type)
       } else if (map.get(type) === 7) {
         let obj = {}
-        obj['kingdom'] = '植物界'
+        obj[this.firstCategory[0]] = this.firstCategory[1]
         this.categoryValue.forEach(item => {
           obj[item[0]] = item[1]
         })

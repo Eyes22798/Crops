@@ -42,7 +42,7 @@ const COMMON_ROUTER = [{
     title: '作物检索',
     requireAuth: true
   },
-  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/plant/Plant.vue')
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/search/plant/Plant.vue')
 },
 {
   path: '/enemy',
@@ -51,7 +51,7 @@ const COMMON_ROUTER = [{
     title: '天敌检索',
     requireAuth: true
   },
-  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/enemy/Enemy.vue')
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/search/enemy/Enemy.vue')
 },
 {
   path: '/disease',
@@ -60,7 +60,7 @@ const COMMON_ROUTER = [{
     title: '胁迫检索',
     requireAuth: true
   },
-  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/disease/Disease.vue')
+  component: () => import(/* webpackChunkName: "UserInfo" */ '@/views/search/disease/Disease.vue')
 },
 {
   path: '/404',

@@ -1,7 +1,10 @@
 <template>
   <div id="plant">
     <Header />
-    <Parallax />
+    <Parallax
+     :firstCategory="firstCategory"
+     :img="img"
+    />
     <Main />
     <Footer />
   </div>
@@ -10,13 +13,14 @@
 <script>
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
-import Parallax from './components/Parallax.vue'
+import Parallax from '../components/Parallax'
 import Main from './components/Main.vue'
 export default {
   name: 'Plant',
   data () {
     return {
-      height: 200
+      firstCategory: ['kingdom', '植物界'],
+      img: require('@/assets/images/header1.jpg')
     }
   },
   components: {
