@@ -155,7 +155,7 @@ const common = {
     return $axios({
       url: '/common/plant/foundbycate',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 显示界门纲目科属的所属关系
@@ -163,7 +163,7 @@ const common = {
     return $axios({
       url: '/common/category/found',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 根据作物图像检索

@@ -275,7 +275,8 @@ export default {
   }),
   computed: {
     ...mapGetters([
-      'pageName'
+      'pageName',
+      'category'
     ])
   },
   mounted () {
@@ -287,9 +288,33 @@ export default {
     },
     pageName () {
       this.getPlantByName(this.pageName, this.page = 1, this.pageSize)
+      this.toast(this.pageName)
+    },
+    category () {
+      this.category['pagenum'] = this.page
+      this.category['pagesize'] = this.pageSize
+      this.getPlantByCategrory(this.category)
+      this.toast(this.category.species)
     }
   },
   methods: {
+    toast (name) {
+      this.$toast(`${name}已经搜索成功`, {
+        x: 'right',
+        y: 'top',
+        icon: 'info',
+        dismissable: false,
+        showClose: true
+      })
+    },
+    pagination (data) {
+      let list = data.list
+      Object.keys(list).forEach((key) => {
+        list[key].show = true
+      })
+      this.listObj = list
+      this.number = parseInt(data.number / this.pageSize)
+    },
     getPlantByName (name, pageNum, pageSize) {
       this.$api.common
         .getPlantByName(
@@ -299,12 +324,7 @@ export default {
         )
         .then(res => {
           if (res.code === 200) {
-            let list = res.data.list
-            Object.keys(list).forEach((key) => {
-              list[key].show = true
-            })
-            this.listObj = list
-            this.number = parseInt(res.data.number / this.pageSize)
+            this.pagination(res.data)
           }
         })
     },
@@ -312,14 +332,24 @@ export default {
       this.$api.common
         .getPlantInfo(plantId)
         .then(res => {
-          this.list = {
-            ...res.data.plant
+          if (res.code === 200) {
+            this.list = {
+              ...res.data.plant
+            }
+            this.biologycategory = {
+              ...res.data.biologycategory
+            }
+            this.imageFile = res.data.list
           }
-          this.biologycategory = {
-            ...res.data.biologycategory
+        })
+    },
+    getPlantByCategrory (params) {
+      this.$api.common
+        .getPlantByCategory(params)
+        .then(res => {
+          if (res.code === 200) {
+            this.pagination(res.data)
           }
-          this.imageFile = res.data.list
-          console.log(this.imageFile)
         })
     }
   }

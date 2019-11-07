@@ -20,9 +20,13 @@ const namePassword = null
 // 分页 name 属性
 const pageName = null
 
+// 联动搜索 传参
+const category = null
+
 export default {
   namePassword,
   userInfo,
   sessionID,
-  pageName
+  pageName,
+  category
 }

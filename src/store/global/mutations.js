@@ -35,6 +35,13 @@ const mutations = {
     } catch (err) {
       console.log(`清除账户密码失败，${err}`)
     }
+  },
+  [types.SET_CATEGORY] (state, data) {
+    try {
+      state.category = data
+    } catch (err) {
+      console.log(`清除账户密码失败，${err}`)
+    }
   }
 }
 

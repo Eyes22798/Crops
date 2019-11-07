@@ -16,5 +16,8 @@ export default {
   },
   setPageName ({ commit }, param) {
     commit(types.SET_PAGENAME, param)
+  },
+  setCategory ({ commit }, param) {
+    commit(types.SET_CATEGORY, param)
   }
 }
