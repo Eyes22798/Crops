@@ -19,5 +19,17 @@ export default {
   },
   setCategory ({ commit }, param) {
     commit(types.SET_CATEGORY, param)
+  },
+  setDiseaseName ({ commit }, param) {
+    commit(types.SET_DISEASENAME, param)
+  },
+  removeDiseaseName ({ commit }, param) {
+    commit(types.REMOVE_DISEASENAME, param)
+  },
+  setPestDiseaseName ({ commit }, param) {
+    commit(types.SET_PESEDISEASENAME, param)
+  },
+  removePestDiseaseName ({ commit }, param) {
+    commit(types.REMOVE_PESEDISEASENAME, param)
   }
 }

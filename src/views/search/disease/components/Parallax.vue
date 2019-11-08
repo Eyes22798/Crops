@@ -24,7 +24,7 @@
                         autofocus
                         height="65"
                         placeholder="根据病害名称检索"
-                        v-model="search"
+                        v-model.trim="diseaseSearch"
                         @click:append="getSearchData"
                         @keyup.enter="getSearchData"
                         v-on="on"
@@ -43,7 +43,7 @@
                         autofocus
                         height="65"
                         placeholder="根据虫害名称检索"
-                        v-model="search"
+                        v-model.trim="pestSearch"
                         @click:append="getSearchData"
                         @keyup.enter="getSearchData"
                         v-on="on"
@@ -93,6 +93,8 @@ export default {
   data: () => ({
     height: 400,
     search: null,
+    diseaseSearch: null,
+    pestSearch: null,
     tab: null,
     cols: 12,
     items: [
@@ -148,21 +150,24 @@ export default {
   }),
   watch: {
     tab () {
-      if (this.tab === 1) {
-        this.getCategory('kingdom', '植物界')
+      if (this.tab === 2) {
+        this.getCategory('kingdom', '动物界')
       }
     }
   },
   methods: {
     ...mapMutations({
-      setPageName: types.SET_PAGENAME,
-      setCategory: types.SET_CATEGORY
+      setDiseaseName: types.SET_DISEASENAME,
+      setPestDiseaseName: types.SET_PESEDISEASENAME
     }),
     getSearchData () {
-      if (this.search) {
-        this.search = this.search.trim()
-        this.setPageName(this.search)
-        this.search = null
+      if (this.diseaseSearch) {
+        this.setDiseaseName(this.diseaseSearch)
+        this.diseaseSearch = null
+      }
+      if (this.pestSearch) {
+        this.setPestDiseaseName(this.pestSearch)
+        this.pestSearch = null
       }
     },
     getCategory (type, value) {

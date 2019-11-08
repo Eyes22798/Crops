@@ -33,14 +33,42 @@ const mutations = {
     try {
       state.pageName = data
     } catch (err) {
-      console.log(`清除账户密码失败，${err}`)
+      console.log(`传递分页name失败，${err}`)
     }
   },
   [types.SET_CATEGORY] (state, data) {
     try {
       state.category = data
     } catch (err) {
-      console.log(`清除账户密码失败，${err}`)
+      console.log(`保存联动分级信息失败，${err}`)
+    }
+  },
+  [types.SET_DISEASENAME] (state, data) {
+    try {
+      state.diseaseName = data
+    } catch (err) {
+      console.log(`保存病害名失败，${err}`)
+    }
+  },
+  [types.REMOVE_DISEASENAME] (state) {
+    try {
+      state.diseaseName = null
+    } catch (err) {
+      console.log(`清除病害名失败，${err}`)
+    }
+  },
+  [types.SET_PESEDISEASENAME] (state, data) {
+    try {
+      state.pestDiseaseName = data
+    } catch (err) {
+      console.log(`保存病害名失败，${err}`)
+    }
+  },
+  [types.REMOVE_PESEDISEASENAME] (state) {
+    try {
+      state.pestDiseaseName = null
+    } catch (err) {
+      console.log(`清除病害名失败，${err}`)
     }
   }
 }

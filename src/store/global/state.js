@@ -19,14 +19,19 @@ if (cookie && !local.get('JSESSIONID')) {
 const namePassword = null
 // 分页 name 属性
 const pageName = null
-
 // 联动搜索 传参
 const category = null
+// 病害名称
+const diseaseName = null
+// 虫害名称
+const pestDiseaseName = null
 
 export default {
   namePassword,
   userInfo,
   sessionID,
   pageName,
-  category
+  category,
+  diseaseName,
+  pestDiseaseName
 }

@@ -205,19 +205,17 @@ const common = {
     })
   },
   // 根据病害名称检索
-  getDiseaseByName (params) {
+  getDiseaseByName (name = '稻瘟病', pageNum = 1, pageSize = 3) {
     return $axios({
-      url: '/common/disease/foundbyname',
-      method: 'post',
-      data: qs.stringify(params)
+      url: `/common/disease/foundbyname?name=${name}&pageNum=${pageNum}&pageSize=${pageSize}`,
+      method: 'get'
     })
   },
   // 根据虫害名称检索
-  getPestByName (params) {
+  getPestByName (name = '蝗虫', pageNum = 1, pageSize = 3) {
     return $axios({
-      url: '/common/pest/foundbyname',
-      method: 'post',
-      data: qs.stringify(params)
+      url: `/common/pest/foundbyname?name=${name}&pageNum=${pageNum}&pageSize=${pageSize}`,
+      method: 'get'
     })
   },
   // 根据虫害科属联动检索

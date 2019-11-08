@@ -4,7 +4,9 @@ const getters = {
   sessionID: (state) => state.sessionID,
   namePassword: (state) => state.namePassword,
   pageName: (state) => state.pageName,
-  category: (state) => state.category
+  category: (state) => state.category,
+  diseaseName: (state) => state.diseaseName,
+  pestDiseaseName: (state) => state.pestDiseaseName
 }
 
 export default getters
