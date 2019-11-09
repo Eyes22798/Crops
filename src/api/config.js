@@ -1,5 +1,5 @@
-const BASE_URL = 'http://localhost:8900/farm/'
-const TEST_URL = 'http://yapi.demo.qunar.com/mock/94110/farm'
+const BASE_URL = '/farm'
+const TEST_URL = '/farm'
 
 // console.log(process.env.NODE_ENV)
 const URL = process.env.NODE_ENV === 'development' ? TEST_URL : BASE_URL

@@ -158,7 +158,8 @@ export default {
   methods: {
     ...mapMutations({
       setDiseaseName: types.SET_DISEASENAME,
-      setPestDiseaseName: types.SET_PESEDISEASENAME
+      setPestDiseaseName: types.SET_PESEDISEASENAME,
+      setCategory: types.SET_CATEGORY
     }),
     getSearchData () {
       if (this.diseaseSearch) {
@@ -194,7 +195,7 @@ export default {
       if (e) {
         this.categoryValue.push([type, e])
         if (this.categoryValue.length > (map.get(type) - 1)) {
-          this.categoryValue.splice(map.get(type) - 3, 1)
+          this.categoryValue.splice(map.get(type) - 2, 1)
         }
       }
       if (map.get(type) !== 7 && e) {
@@ -203,10 +204,14 @@ export default {
       } else if (map.get(type) === 7) {
         let obj = {}
         obj['kingdom'] = '植物界'
+        obj['pagenum'] = 1
+        obj['pagesize'] = 3
         this.categoryValue.forEach(item => {
+          console.log(item)
           obj[item[0]] = item[1]
         })
         this.setCategory(obj)
+        console.log(obj)
       }
     },
     removeSelectItem (id) {

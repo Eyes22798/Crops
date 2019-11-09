@@ -174,7 +174,7 @@ export default {
       if (e) {
         this.categoryValue.push([type, e])
         if (this.categoryValue.length > (map.get(type) - 1)) {
-          this.categoryValue.splice(map.get(type) - 3, 1)
+          this.categoryValue.splice(map.get(type) - 2, 1)
         }
       }
       if (map.get(type) !== 7 && e) {
@@ -184,6 +184,7 @@ export default {
         let obj = {}
         obj[this.firstCategory[0]] = this.firstCategory[1]
         this.categoryValue.forEach(item => {
+          console.log(item)
           obj[item[0]] = item[1]
         })
         this.setCategory(obj)

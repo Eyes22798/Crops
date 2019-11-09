@@ -67,12 +67,11 @@ const serverErrorHanle = (status) => {
 export default function $axios (options) {
   return new Promise((resolve, reject) => {
     const instance = axios.create({
-      // baseURL: config.baseURL,
+      baseURL: config.baseURL,
       timeout: config.timeout,
       headers: config.headers
     })
     // post请求头
-    instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
     instance.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
     instance.defaults.headers.common['Authorization'] = getCookie('JSESSIONID')
     // http request 拦截器

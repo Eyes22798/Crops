@@ -11,7 +11,7 @@ module.exports = {
         changeOrigin: true,
         ws: false,
         pathRewrite: {
-          '^/': ''
+          '^/farm': ''
         }
       }
     }

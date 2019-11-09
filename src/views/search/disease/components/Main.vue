@@ -6,144 +6,13 @@
           <v-row class="mt-n2">
             <v-col cols="12" md="4" v-for="item in listObj" :key="item.plantid">
               <v-card min-width="300">
-                <v-dialog v-model="dialog" width="500">
-                  <template v-slot:activator="{ on }">
-                    <material-card
-                      color="warning light"
-                      title="病害信息"
-                      icon="featured_play_list"
-                      @click="getEnemyInfoById(item.plantid)"
-                      v-on="on"
-                    >
-                      <v-icon left>mdi-label</v-icon>点击查看详细信息
-                    </material-card>
-                  </template>
-
-                  <v-card>
-                    <v-card-title
-                      class="headline grey lighten-2"
-                      primary-title
-                    >{{ list.chinesename }}</v-card-title>
-
-                    <v-row justify="center">
-                      <v-col cols="12">
-                        <v-card elevation="24">
-                          <v-system-bar lights-out></v-system-bar>
-                          <v-carousel
-                            :continuous="false"
-                            cycle
-                            :show-arrows="false"
-                            hide-delimiter-background
-                            delimiter-icon="mdi-minus"
-                            height="300"
-                          >
-                            <v-carousel-item v-for="(slide, i) in imageFile" :key="i">
-                              <v-parallax :src="slide.imagefile">
-                                <v-row class="fill-height" align="center" justify="center">
-                                  <div class="display-3 mt-n12">{{ slide.name }}</div>
-                                </v-row>
-                              </v-parallax>
-                            </v-carousel-item>
-                          </v-carousel>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                    <v-card-text>
-                      <strong class="title font-weight-bold">科属关系</strong>
-                    </v-card-text>
-                    <v-card-text class="py-0">
-                      <v-timeline align-top dense>
-                        <v-timeline-item color="warning" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.kingdom }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关界的描述</strong>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="orange" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.phylum }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关门的描述</strong>
-                              <div class="caption mb-2">Hangouts</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="blue" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory._class }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关纲的描述</strong>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="green" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.bioOrder }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关目的描述</strong>
-                              <div class="caption">Web App</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="yellow" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.family }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关科的描述</strong>
-                              <div class="caption">Web App</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="teal" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.genus }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关属的描述</strong>
-                              <div class="caption">Web App</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="purple" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.species }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关种的表述</strong>
-                              <div class="caption">{{ item.growthhabit }}</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-                      </v-timeline>
-                    </v-card-text>
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="dialog = false">关闭</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <material-card
+                  color="warning light"
+                  title="病害信息"
+                  icon="featured_play_list"
+                >
+                  <v-icon left>mdi-label</v-icon>{{ item.chinesename }}
+                </material-card>
                 <v-row class="justify-center align-center">
                   <material-card color="info" class="mx-2 mt-n2" icon="spa" iconText="中文学名">
                     <v-chip outlined label>
@@ -291,6 +160,12 @@ export default {
         this.getDiseaseByName(this.name, this.page, this.pageSize)
       } else if (this.tag === 'pest') {
         this.getPestDiseaseByName(this.name, this.page, this.pageSize)
+      } else if (this.name === '稻瘟病') {
+        this.getDiseaseByName(this.name, this.page, this.pageSize)
+      } else {
+        this.category['pagenum'] = this.page
+        this.category['pagesize'] = this.pageSize
+        this.getPestByCategory(this.category)
       }
     },
     diseaseName () {
@@ -309,8 +184,8 @@ export default {
     category () {
       this.category['pagenum'] = this.page
       this.category['pagesize'] = this.pageSize
-      this.getEnemyByCategory(this.category)
-      this.toast(this.category.species)
+      this.name = this.category.species
+      this.getPestByCategory(this.category)
     }
   },
   methods: {
@@ -357,9 +232,9 @@ export default {
           }
         })
     },
-    getEnemyByCategory (params) {
+    getPestByCategory (params) {
       this.$api.common
-        .getEnemyByCategory(params)
+        .getPestByCategory(params)
         .then(res => {
           if (res.code === 200) {
             this.pagination(res.data)

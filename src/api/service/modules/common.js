@@ -223,7 +223,7 @@ const common = {
     return $axios({
       url: '/common/pest/foundbycate',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 植保信息检索
