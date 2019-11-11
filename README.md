@@ -504,9 +504,8 @@ export default function $axios (options) {
         console.log(config)
         // 获取 cookie
         const token = globalStore.state.sessionID
-        const loginMeta = config.url.toLocaleLowerCase().includes('common')
-        // const token = getCookie('JSESSIONID')
         // bug-2
+        const loginMeta = config.url.toLocaleLowerCase().includes('common')
         console.log(`当前的token: ${token}`)
         if (!token && !loginMeta) {
           $toast('请先登录!', {
@@ -522,7 +521,7 @@ export default function $axios (options) {
           }, 2000)
         }
         // 根据请求方法，序列化传来的参数，根据后端需求是否序列化
-        if (config.method.toLocaleLowerCase() === 'post' ||
+        if ((config.method.toLocaleLowerCase() === 'post' && !config.headers.AuthorizationPhoto) ||
           config.method.toLocaleLowerCase() === 'put' ||
           config.method.toLocaleLowerCase() === 'delete') {
           config.data = qs.stringify(config.data)
@@ -583,7 +582,12 @@ export default function $axios (options) {
  // response 拦截器
     instance.interceptors.response.use(
       response => {
-        console.log(response)
+        // 拿到 header 上的 set-cookie
+        let sessionCookie = getCookie(sessionId)
+        if (sessionCookie) {
+          local.set(sessionId, sessionCookie)
+          globalStore.state.sessionID = local.get(sessionId)
+        }
         // 1. 保存 response 中的数据
         //    注意： IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
         let data
@@ -596,9 +600,19 @@ export default function $axios (options) {
         const responseError = new Error()
         responseError.data = data
         responseError.response = response
+        // 特殊状态码特殊处理
         if (data.errcode === 404) {
           setTimeout(() => {
             routerToObj('404')
+          })
+        } else if (data.code === 1003) {
+          // 清除 localstorage cookie 跳转登录
+          delCookie(sessionId)
+          localStorage.clear()
+          routerToObj('login')
+        } else if (data.code === 500) {
+          setTimeout(() => {
+            routerToObj('500')
           })
         }
         responseError.message = errorHandle(data.code, response.data.message)
@@ -626,9 +640,6 @@ export default function $axios (options) {
         if (err.toString().includes('timeout')) {
           err.message = '抱歉，服务器超时，请稍后再试！'
         }
-        // 404 500 状态码跳转
-        routerToObj(`${err.response.status}`)
-        console.error(`错误消息： ${err}`)
         // 显示错误消息
         $toast(`错误: ${err.message}`, {
           x: 'right',
@@ -638,6 +649,11 @@ export default function $axios (options) {
           dismissable: false,
           showClose: true
         })
+        // 404 500 状态码跳转
+        if (err.response.status) {
+          routerToObj(`${err.response.status}`)
+        }
+        console.error(`错误消息： ${err}`)
         return Promise.reject(err) // 返回接口返回的错误信息
       }
     )
