@@ -272,7 +272,8 @@ export default {
     page: 1,
     pageSize: 3,
     number: null,
-    listObj: null
+    listObj: null,
+    tag: false
   }),
   computed: {
     ...mapGetters([
@@ -285,11 +286,18 @@ export default {
   },
   watch: {
     page () {
-      const name = this.pageName ? this.pageName : this.name
-      this.getEnemyByName(name, this.page, this.pageSize)
+      if (this.tag) {
+        this.category['pagenum'] = this.page
+        this.category['pagesize'] = this.pageSize
+        this.getEnemyByCategory(this.category)
+      } else {
+        const name = this.pageName ? this.pageName : this.name
+        this.getEnemyByName(name, this.page, this.pageSize)
+      }
     },
     pageName () {
       this.getEnemyByName(this.pageName, this.page = 1, this.pageSize)
+      this.tag = false
       this.toast(this.pageName)
     },
     category () {
@@ -297,6 +305,7 @@ export default {
       this.category['pagesize'] = this.pageSize
       this.getEnemyByCategory(this.category)
       this.toast(this.category.species)
+      this.tag = true
     }
   },
   methods: {

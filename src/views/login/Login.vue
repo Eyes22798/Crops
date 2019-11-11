@@ -213,7 +213,6 @@ export default {
         password: this.password,
         code: this.code
       }
-      console.log(formData)
       if (formData.code === null) {
         this.$api.common
           .login({

@@ -184,7 +184,6 @@ export default {
         let obj = {}
         obj[this.firstCategory[0]] = this.firstCategory[1]
         this.categoryValue.forEach(item => {
-          console.log(item)
           obj[item[0]] = item[1]
         })
         this.setCategory(obj)

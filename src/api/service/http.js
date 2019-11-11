@@ -6,9 +6,9 @@ import 'nprogress/nprogress.css'
 import config from '../config'
 import {
   getCookie,
-  setCookie,
   delCookie
 } from '@/common/untils/cookieUntil'
+import { stroage } from '@/common/untils/strogeUntil.js'
 import globalStore from '@/store/global'
 import router from '@/router'
 import Vue from 'vue'
@@ -64,6 +64,11 @@ const serverErrorHanle = (status) => {
   return errorMap.get(status)
 }
 
+// local 封装工具
+const local = stroage.local
+// sessionID
+let sessionId = 'JSESSIONID'
+
 export default function $axios (options) {
   return new Promise((resolve, reject) => {
     const instance = axios.create({
@@ -71,9 +76,8 @@ export default function $axios (options) {
       timeout: config.timeout,
       headers: config.headers
     })
-    // post请求头
-    instance.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8'
-    instance.defaults.headers.common['Authorization'] = getCookie('JSESSIONID')
+    // 上保险
+    instance.defaults.headers.common['Authorization'] = getCookie(sessionId)
     // http request 拦截器
     instance.interceptors.request.use(
       config => {
@@ -83,9 +87,8 @@ export default function $axios (options) {
         console.log(config)
         // 获取 cookie
         const token = globalStore.state.sessionID
-        const loginMeta = config.url.toLocaleLowerCase().includes('common')
-        // const token = getCookie('JSESSIONID')
         // bug-2
+        const loginMeta = config.url.toLocaleLowerCase().includes('common')
         console.log(`当前的token: ${token}`)
         if (!token && !loginMeta) {
           $toast('请先登录!', {
@@ -157,12 +160,11 @@ export default function $axios (options) {
     // response 拦截器
     instance.interceptors.response.use(
       response => {
-        console.log(response)
-        // 拿到 header 上的 cookie
-        let cookie = []
-        if (response.headers.cookie) {
-          cookie = response.headers.cookie.toString().split('=')
-          setCookie(cookie[0], cookie[1], 50000)
+        // 拿到 header 上的 set-cookie
+        let sessionCookie = getCookie(sessionId)
+        if (sessionCookie) {
+          local.set(sessionId, sessionCookie)
+          globalStore.state.sessionID = local.get(sessionId)
         }
         // 1. 保存 response 中的数据
         //    注意： IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
@@ -183,7 +185,7 @@ export default function $axios (options) {
           })
         } else if (data.code === 1003) {
           // 清除 localstorage cookie 跳转登录
-          delCookie('JSESSIONID')
+          delCookie(sessionId)
           localStorage.clear()
           routerToObj('login')
         } else if (data.code === 500) {
