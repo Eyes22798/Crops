@@ -5,7 +5,7 @@ const local = stroage.local
 // 从 localStorege 中获取用户的详细信息
 const userInfo = '' || local.get('userInfo')
 // 创建唯一标识判断，判断登录状态
-const sessionID = null
+const sessionID = stroage.local.get('JSESSIONID')
 // 从注册到登录信息
 const namePassword = null
 // 分页 name 属性

@@ -216,7 +216,7 @@ export default {
       if (formData.code === null) {
         this.$api.common
           .login({
-            username: this.username,
+            phone: this.username,
             password: this.password
           })
           .then(res => {

@@ -30,7 +30,6 @@ router.beforeEach((to, from, next) => {
   }
   // 验证是否需要登录
   if (to.matched.some(res => res.meta.requireAuth)) {
-    console.log(globalStore.state.sessionID)
     // 查询本地是否登录
     if (globalStore.state.sessionID) {
       next()

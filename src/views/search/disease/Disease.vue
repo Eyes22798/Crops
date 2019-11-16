@@ -2,6 +2,7 @@
   <div id="disease">
     <Header />
     <Parallax />
+    <Table />
     <Main />
     <Footer />
   </div>
@@ -11,6 +12,7 @@
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
 import Parallax from './components/Parallax'
+import Table from './components/Table'
 import Main from './components/Main'
 export default {
   name: 'Disease',
@@ -18,6 +20,7 @@ export default {
     Header,
     Footer,
     Main,
+    Table,
     Parallax
   }
 }

@@ -207,11 +207,9 @@ export default {
         obj['pagenum'] = 1
         obj['pagesize'] = 3
         this.categoryValue.forEach(item => {
-          console.log(item)
           obj[item[0]] = item[1]
         })
         this.setCategory(obj)
-        console.log(obj)
       }
     },
     removeSelectItem (id) {

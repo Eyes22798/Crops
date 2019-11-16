@@ -3,14 +3,14 @@
     <v-container>
       <v-row justify="center">
         <v-col cols="12">
-          <v-card elevation="24" class="mt-n10">
-            <v-container>
+          <v-card elevation="24" class="mt-lg-n12">
+            <v-container fluid>
               <v-row justify="center">
-                <v-col cols="12" md="4" sm="12" v-for="(item, index) in feature" :key="index">
-                  <v-card class="mx-auto" max-width="400">
+                <v-col cols="12" lg="4" md="4" sm="12" v-for="(item, index) in feature" :key="index">
+                  <v-card class="mx-auto" min-width="390">
                     <v-img
                       class="white--text"
-                      height="300px"
+                      min-height="390px"
                       :src="item.src"
                     >
                       <v-card-title class="align-end justify-center fill-height">{{ item.featureTitle }}</v-card-title>

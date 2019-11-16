@@ -6,12 +6,9 @@
           <v-row class="mt-n2">
             <v-col cols="12" md="4" v-for="item in listObj" :key="item.plantid">
               <v-card min-width="300">
-                <material-card
-                  color="warning light"
-                  title="病害信息"
-                  icon="featured_play_list"
-                >
-                  <v-icon left>mdi-label</v-icon>{{ item.chinesename }}
+                <material-card color="warning light" title="病害信息" icon="featured_play_list">
+                  <v-icon left>mdi-label</v-icon>
+                  {{ item.chinesename }}
                 </material-card>
                 <v-row class="justify-center align-center">
                   <material-card color="info" class="mx-2 mt-n2" icon="spa" iconText="中文学名">
