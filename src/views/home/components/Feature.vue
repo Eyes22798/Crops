@@ -7,10 +7,10 @@
             <v-container fluid>
               <v-row justify="center">
                 <v-col cols="12" lg="4" md="4" sm="12" v-for="(item, index) in feature" :key="index">
-                  <v-card class="mx-auto" min-width="390">
+                  <v-card class="mx-auto" min-width="350">
                     <v-img
                       class="white--text"
-                      min-height="390px"
+                      min-height="350px"
                       :src="item.src"
                     >
                       <v-card-title class="align-end justify-center fill-height">{{ item.featureTitle }}</v-card-title>

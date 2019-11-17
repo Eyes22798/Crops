@@ -139,7 +139,7 @@ export default {
     pageSize: 3,
     number: null,
     listObj: null,
-    tag: null
+    tag: '稻瘟病'
   }),
   computed: {
     ...mapGetters([
@@ -153,16 +153,15 @@ export default {
   },
   watch: {
     page () {
-      if (this.tag === 'disease') {
-        this.getDiseaseByName(this.name, this.page, this.pageSize)
-      } else if (this.tag === 'pest') {
-        this.getPestDiseaseByName(this.name, this.page, this.pageSize)
-      } else if (this.name === '稻瘟病') {
-        this.getDiseaseByName(this.name, this.page, this.pageSize)
+      const tagMap = new Map([
+        ['disease', this.getDiseaseByName],
+        ['pest', this.getPestDiseaseByName],
+        ['稻瘟病', this.getDiseaseByName]
+      ])
+      if (tagMap.get(this.tag)) {
+        tagMap.get(this.tag)(this.name, this.page, this.pageSize)
       } else {
-        this.category['pagenum'] = this.page
-        this.category['pagesize'] = this.pageSize
-        this.getPestByCategory(this.category)
+        this.setCategoryData()
       }
     },
     diseaseName () {
@@ -179,10 +178,8 @@ export default {
       this.toast(this.name)
     },
     category () {
-      this.category['pagenum'] = this.page
-      this.category['pagesize'] = this.pageSize
-      this.name = this.category.species
-      this.getPestByCategory(this.category)
+      this.tag = 'category'
+      this.setCategoryData()
     }
   },
   methods: {
@@ -237,6 +234,12 @@ export default {
             this.pagination(res.data)
           }
         })
+    },
+    setCategoryData () {
+      this.category['pagenum'] = this.page
+      this.category['pagesize'] = this.pageSize
+      this.name = this.category.species
+      this.getPestByCategory(this.category)
     }
   }
 }
