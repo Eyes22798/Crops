@@ -5,7 +5,7 @@
   >
     <Header />
     <HelloWorld />
-    <Featrue />
+    <Feature />
     <Steppers />
     <Footer />
   </div>
@@ -15,13 +15,13 @@
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
 import HelloWorld from './components/HelloWorld'
-import Featrue from './components/Feature'
+import Feature from './components/Feature'
 import Steppers from './components/Steppers'
 
 export default {
   name: 'Home',
   components: {
-    Featrue,
+    Feature,
     HelloWorld,
     Steppers,
     Header,
