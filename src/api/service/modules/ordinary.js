@@ -71,6 +71,12 @@ const ordinary = {
       },
       data: formData
     })
+  },
+  getImageDataBySolr (name = '海棠', start = 0, row = 10) {
+    return $axios({
+      url: `/ordinary/solr?name=${name}&start=${start}&row=${row}`,
+      method: 'get'
+    })
   }
 }
 

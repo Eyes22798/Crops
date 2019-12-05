@@ -184,7 +184,7 @@ const common = {
   // 显示天敌详细信息
   getEnemyInfo (enemyid) {
     return $axios({
-      url: `/common/enemy/info?enemy=${enemyid}`,
+      url: `/common/enemy/info?enemyid=${enemyid}`,
       method: 'get'
     })
   },
@@ -238,6 +238,17 @@ const common = {
     return $axios({
       url: `/common/message/foundbykey?keyword=${keyword}&PageNum=${PageNum}&PageSize=${PageSize}`,
       method: 'get'
+    })
+  },
+  getImageName (formData) {
+    return $axios({
+      url: '/common/plant/dealImage',
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data;charset=UTF-8',
+        'AuthorizationPhoto': 'updatePhoto'
+      },
+      data: formData
     })
   }
 }

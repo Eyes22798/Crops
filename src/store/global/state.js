@@ -16,6 +16,8 @@ const category = null
 const diseaseName = null
 // 虫害名称
 const pestDiseaseName = null
+// 图像识别得到的名字
+const imageName = null
 
 export default {
   namePassword,
@@ -24,5 +26,6 @@ export default {
   pageName,
   category,
   diseaseName,
-  pestDiseaseName
+  pestDiseaseName,
+  imageName
 }

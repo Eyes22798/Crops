@@ -7,7 +7,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/': {
-        target: 'http://127.0.0.1:3000/mock/11/farm/', // 对应自己的接口
+        target: 'http://www.mock.eyesky.site/mock/23/farm/', // 对应自己的接口  http://127.0.0.1:3000/mock/11/farm/
         changeOrigin: true,
         ws: false,
         pathRewrite: {

@@ -7,6 +7,7 @@
     <HelloWorld />
     <Feature />
     <Steppers />
+    <Parallaxs />
     <Footer />
   </div>
 </template>
@@ -17,6 +18,8 @@ import Footer from '@/components/content/Footer.vue'
 import HelloWorld from './components/HelloWorld'
 import Feature from './components/Feature'
 import Steppers from './components/Steppers'
+import Parallaxs from './components/Parallaxs'
+import Contact from './components/Contact'
 
 export default {
   name: 'Home',
@@ -24,13 +27,10 @@ export default {
     Feature,
     HelloWorld,
     Steppers,
+    Parallaxs,
+    Contact,
     Header,
     Footer
-  },
-  data () {
-    return {
-      test: 'test'
-    }
   }
 }
 </script>

@@ -6,7 +6,8 @@ const getters = {
   pageName: (state) => state.pageName,
   category: (state) => state.category,
   diseaseName: (state) => state.diseaseName,
-  pestDiseaseName: (state) => state.pestDiseaseName
+  pestDiseaseName: (state) => state.pestDiseaseName,
+  imageName: (state) => state.imageName
 }
 
 export default getters

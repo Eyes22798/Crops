@@ -137,7 +137,10 @@ export default {
               showClose: true,
               timeout: 800
             })
+            // 1. 清除 vuex 中所有用户信息
+            // 2. 清除本地存储
             this.removeUserInfoData()
+            localStorage.removeItem('userInfo')
             if (this.$route.path !== '/') {
               this.$router.push('/')
             }

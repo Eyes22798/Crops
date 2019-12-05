@@ -70,6 +70,20 @@ const mutations = {
     } catch (err) {
       console.log(`清除病害名失败，${err}`)
     }
+  },
+  [types.SET_IMAGENAME] (state, data) {
+    try {
+      state.imageName = data
+    } catch (err) {
+      console.log(`保存图像识别出的name失败，${err}`)
+    }
+  },
+  [types.REMOVE_IMAGENAME] (state) {
+    try {
+      state.imageName = null
+    } catch (err) {
+      console.log(`清除图像识别出的name失败，${err}`)
+    }
   }
 }
 

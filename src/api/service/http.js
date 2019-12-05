@@ -8,8 +8,8 @@ import {
   getCookie,
   delCookie
 } from '@/common/untils/cookieUntil'
-import { stroage } from '@/common/untils/strogeUntil.js'
-import globalStore from '@/store/global'
+// import { stroage } from '@/common/untils/strogeUntil.js'
+// import globalStore from '@/store/global'
 import router from '@/router'
 import Vue from 'vue'
 
@@ -65,7 +65,7 @@ const serverErrorHanle = (status) => {
 }
 
 // local 封装工具
-const local = stroage.local
+// const local = stroage.local
 // sessionID
 let sessionId = 'JSESSIONID'
 
@@ -85,24 +85,27 @@ export default function $axios (options) {
           NProgress.start()
         }
         console.log(config)
-        // 获取 cookie
-        const token = globalStore.state.sessionID
+        /*
+          这是登录拦截功能(bug苦笑)
+          // 获取 cookie
+        // const token = globalStore.state.sessionID
         // bug-2
-        const loginMeta = config.url.toLocaleLowerCase().includes('common')
-        console.log(`当前的token: ${token}`)
-        if (!token && !loginMeta) {
-          $toast('请先登录!', {
-            x: 'right',
-            y: 'top',
-            icon: 'info',
-            dismissable: false,
-            showClose: true
-          })
-          // 没有 cookie 重定向到登录页
-          setTimeout(() => {
-            routerToObj('login')
-          }, 2000)
-        }
+        // const loginMeta = config.url.toLocaleLowerCase().includes('common')
+        // console.log(`当前的token: ${token}`)
+        // if (!token && !loginMeta) {
+        //   $toast('请先登录!', {
+        //     x: 'right',
+        //     y: 'top',
+        //     icon: 'info',
+        //     dismissable: false,
+        //     showClose: true
+        //   })
+        //   // 没有 cookie 重定向到登录页
+        //   setTimeout(() => {
+        //     routerToObj('login')
+        //   }, 2000)
+        // }
+        */
         // 根据请求方法，序列化传来的参数，根据后端需求是否序列化
         if ((config.method.toLocaleLowerCase() === 'post' && !config.headers.AuthorizationPhoto) ||
           config.method.toLocaleLowerCase() === 'put' ||
@@ -160,12 +163,14 @@ export default function $axios (options) {
     // response 拦截器
     instance.interceptors.response.use(
       response => {
-        // 拿到 header 上的 set-cookie
-        let sessionCookie = getCookie(sessionId)
-        if (sessionCookie) {
-          local.set(sessionId, sessionCookie)
-          globalStore.state.sessionID = local.get(sessionId)
+        /*
+          拿到 header 上的 set-cookie
+          let sessionCookie = getCookie(sessionId)
+            if (sessionCookie) {
+            local.set(sessionId, sessionCookie)
+            globalStore.state.sessionID = local.get(sessionId)
         }
+        */
         // 1. 保存 response 中的数据
         //    注意： IE9时response.data是undefined，因此需要使用response.request.responseText(Stringify后的字符串)
         let data
@@ -182,16 +187,19 @@ export default function $axios (options) {
         if (data.errcode === 404) {
           setTimeout(() => {
             routerToObj('404')
-          })
-        } else if (data.code === 1003) {
+          }, 1000)
+        } else if (data.code === 1003 || data.code === 406) {
           // 清除 localstorage cookie 跳转登录
           delCookie(sessionId)
           localStorage.clear()
-          routerToObj('login')
+          // 重定向到登录页
+          setTimeout(() => {
+            routerToObj('login')
+          }, 1000)
         } else if (data.code === 500) {
           setTimeout(() => {
             routerToObj('500')
-          })
+          }, 1000)
         }
         responseError.message = errorHandle(data.code, response.data.message)
         // 3. 错误 => 显示错误消息 || 正常 => 结束 Nprogress 动画

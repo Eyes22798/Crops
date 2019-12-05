@@ -31,5 +31,11 @@ export default {
   },
   removePestDiseaseName ({ commit }, param) {
     commit(types.REMOVE_PESEDISEASENAME, param)
+  },
+  setImageName ({ commit }, param) {
+    commit(types.SET_IMAGENAME, param)
+  },
+  removeImageName ({ commit }, param) {
+    commit(types.REMOVE_IMAGENAME, param)
   }
 }
