@@ -6,7 +6,6 @@
           <v-row>
             <v-col cols="12" lg="8" md="6" sm="12" class="justify-center align-self-center mb-12">
               <h1 class="title-text">{{ testText }}</h1>
-              <p class="subheading font-weight-regular title">从零开始的巴伯尔本</p>
               <router-link :to="{path: '/login'}">
                 <v-btn>点击跳转</v-btn>
               </router-link>

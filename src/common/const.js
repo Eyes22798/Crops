@@ -20,3 +20,5 @@ export const urlRex = /^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z
 export const noNull = /^\s*$/g
 // 中英文名字正则表达式-支持英文空格 中文少数名族
 export const nameRex = /^[\u4E00-\u9FA5A-Za-z\s]+(·[\u4E00-\u9FA5A-Za-z]+)*$/
+// oss地址
+export const imageUrl = 'http://www.os.eyesky.site'

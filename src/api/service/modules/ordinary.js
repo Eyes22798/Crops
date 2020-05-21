@@ -1,5 +1,4 @@
 import $axios from '../http'
-import qs from 'qs'
 // 专家模块所有接口
 
 const ordinary = {
@@ -23,7 +22,8 @@ const ordinary = {
       url: '/ordinary/quest/insert',
       method: 'post',
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data;charset=UTF-8',
+        'AuthorizationPhoto': 'updatePhoto'
       },
       data: formData
     })
@@ -33,7 +33,7 @@ const ordinary = {
     return $axios({
       url: '/ordinary/quest/update',
       method: 'post',
-      data: qs.stringify(params)
+      data: params
     })
   },
   // 修改添加图片内容
@@ -42,7 +42,8 @@ const ordinary = {
       url: '/ordinary/quest/insertImage',
       method: 'post',
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data;charset=UTF-8',
+        'AuthorizationPhoto': 'updatePhoto'
       },
       data: formData
     })
@@ -67,7 +68,8 @@ const ordinary = {
       url: '/ordinary/info/insert',
       method: 'post',
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data;charset=UTF-8',
+        'AuthorizationPhoto': 'updatePhoto'
       },
       data: formData
     })

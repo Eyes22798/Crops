@@ -41,7 +41,6 @@ const errorHandle = (status, other) => {
     [1005, '请使用一个新的电话号码'],
     [1006, '未找到任何相关信息']
   ]
-  console.log(other)
   const statusMap = new Map(items)
   return statusMap.get(status)
 }
@@ -84,7 +83,6 @@ export default function $axios (options) {
         if (config) {
           NProgress.start()
         }
-        console.log(config)
         /*
           这是登录拦截功能(bug苦笑)
           // 获取 cookie

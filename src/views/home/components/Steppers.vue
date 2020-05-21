@@ -12,8 +12,7 @@
           >
             <v-carousel-item v-for="(carouselItem, i) in slides" :key="i" class="justify-center">
               <p class="title" style="text-align: center">{{ carouselItem.title }}</p>
-              <v-parallax :src="carouselItem.webpage">
-              </v-parallax>
+              <v-img :src="carouselItem.webpage"></v-img>
             </v-carousel-item>
           </v-carousel>
           <div class="text-center">

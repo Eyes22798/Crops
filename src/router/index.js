@@ -8,17 +8,15 @@ import expert from './expert'
 import ordinary from './ordinary'
 // import globalStore from '@/store/global'
 
+// 拿到 Vue 原型上的 $toast 对象
+const prototype = Vue.prototype
+
 Vue.use(Router)
 
 // 合并所有的路由
-const routerObj = Object.assign(
-  common,
-  expert,
-  ordinary
-)
-
+let routerArr = common.concat(expert, ordinary)
 const router = new Router({
-  routes: routerObj
+  routes: routerArr
 })
 
 // 设置路由拦截
@@ -38,12 +36,22 @@ router.beforeEach((to, from, next) => {
       if (to.fullPath === '/login') {
         next()
       } else {
-        next({
-          path: '/login',
-          query: {
-            redirect: to.fullPath
-          }
+        prototype.$toast('请先登录或者注册!', {
+          x: 'right',
+          y: 'top',
+          icon: 'info',
+          dismissable: false,
+          showClose: true,
+          timeout: 1000
         })
+        setTimeout(() => {
+          next({
+            path: '/login',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }, 1500)
       }
     }
   } else {

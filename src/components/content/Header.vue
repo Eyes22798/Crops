@@ -17,7 +17,7 @@
         </v-toolbar-title>
         <div class="flex-grow-1"></div>
         <v-toolbar-items v-for="title in titles" :key="title">
-          <v-btn text :class="classObject">{{ title }}</v-btn>
+          <v-btn text :class="classObject" @click="routerLink(title)">{{ title }}</v-btn>
         </v-toolbar-items>
         <div class="flex-grow-1"></div>
         <v-row v-if="!userInfo">
@@ -65,13 +65,14 @@
 <script>
 import * as types from '@/store/global/mutation-types'
 import { mapGetters, mapMutations } from 'vuex'
+import { imageUrl } from '@/common/const.js'
 export default {
   name: 'Header',
   props: ['absolute'],
   data: () => ({
     phone: 12345679,
     src: null,
-    titles: ['国际', '国内', '病害', '虫害', '植保知识', '产品', '资讯'],
+    titles: ['国际', '国内', '病害', '虫害', '植保知识', '产品', '咨询'],
     color: null,
     isActive: false,
     elevation: 0,
@@ -81,7 +82,7 @@ export default {
         icon: 'account_box'
       },
       {
-        title: '账号设置',
+        title: '个人咨询',
         icon: 'assignment_ind'
       },
       {
@@ -110,7 +111,7 @@ export default {
     // 如果，state 中的 userInfo 没有数据（用户没有登录）更改 view
     if (this.userInfo) {
       this.phone = this.userInfo.phone
-      this.src = this.userInfo.photo
+      this.src = process.env.NODE_ENV === 'development' ? this.userInfo.photo : `${imageUrl}/${this.userInfo.photo}`
     }
   },
   mounted () {
@@ -150,8 +151,8 @@ export default {
     setUserInfo () {
       this.$router.push('/userInfo')
     },
-    setAccount () {
-      console.log('我是账号设置')
+    setQuestion () {
+      this.$router.push('userQuestion')
     },
     handleScroll () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
@@ -164,14 +165,25 @@ export default {
         '个人设置': () => {
           this.setUserInfo()
         },
-        '账号设置': () => {
-          this.setAccount()
+        '个人咨询': () => {
+          this.setQuestion()
         },
         '账号退出': () => {
           this.loginout()
         }
       }
       funObj[title]()
+    },
+    routerLink (title) {
+      // 待补充
+      if (title === '咨询') {
+        const funObj = {
+          '咨询': () => {
+            this.$router.push('/question')
+          }
+        }
+        funObj[title]()
+      }
     }
   }
 }
