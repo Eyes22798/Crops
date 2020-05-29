@@ -167,7 +167,7 @@ export default {
     ],
     categoryValue: [],
     uploadBtnText: '选择图片',
-    uploadBtnIcon:  'unarchive',
+    uploadBtnIcon: 'unarchive',
     btnWidth: false,
     imageFile: null,
     btnLoading: false,
@@ -183,7 +183,7 @@ export default {
     dialog (val) {
       if (!val) return
       setTimeout(() => (this.dialog = false), 4000)
-    },
+    }
   },
   methods: {
     ...mapMutations({
@@ -270,7 +270,6 @@ export default {
         .then(res => {
           if (res.code === 200) {
             this.imageName = res.data
-            console.log(res.data)
             setTimeout(() => {
               this.btnLoading = false
               this.dialog = false

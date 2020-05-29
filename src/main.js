@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import untils from './common/untils/untils'
 import api from './api'
+import './assets/icon/index'
 
 Vue.use(api)
 

@@ -79,6 +79,15 @@ const COMMON_ROUTER = [{
     requireAuth: false
   },
   component: () => import(/* webpackChunkName: "500" */ '@/views/error/500/500.vue')
+},
+{
+  path: '/message',
+  name: 'message',
+  meta: {
+    title: '资讯',
+    requireAuth: false
+  },
+  component: () => import(/* webpackChunkName: "500" */ '@/views/message/Message.vue')
 }
 ]
 

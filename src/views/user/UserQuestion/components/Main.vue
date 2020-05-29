@@ -14,7 +14,14 @@
 
                 <v-list-item link>
                   <v-list-item-content>
-                    <v-list-item-title class="title">{{ formData.name }}</v-list-item-title>
+                    <v-list-item-title class="title d-flex justify-start align-center" v-if="formData.state === 1">
+                      <svg-icon iconClass="用户" class="svg"></svg-icon>
+                      <p class="mb-1">{{ formData.name }}</p>
+                    </v-list-item-title>
+                    <v-list-item-title class="title d-flex justify-start align-center" v-if="formData.state === 2">
+                      <svg-icon iconClass="专家" class="svg"></svg-icon>
+                      <p class="mb-0">专家 / {{ formData.name }}</p>
+                    </v-list-item-title>
                     <v-list-item-subtitle>{{ formData.email }}</v-list-item-subtitle>
                   </v-list-item-content>
 
@@ -106,7 +113,7 @@
                             <v-btn fab dark small color="indigo" @click="addQuestion">
                               <v-icon>mdi-plus</v-icon>
                             </v-btn>
-                            <v-btn fab dark small color="red" @click="deleteQuestion(item)">
+                            <v-btn fab dark small color="red" @click.stop="dialogDelete = true">
                               <v-icon>mdi-delete</v-icon>
                             </v-btn>
                           </v-speed-dial>
@@ -117,7 +124,7 @@
                                 <span class="headline">咨询问题</span>
                               </v-card-title>
                               <v-card-text>
-                                <small class="font-weight-bold">*咨询新的问题</small>
+                                <small class="subtitle-1 font-weight-bold">*咨询新的问题</small>
                                 <v-container>
                                   <v-row>
                                     <v-col cols="12" sm="6" md="6">
@@ -178,6 +185,41 @@
                               </v-card-text>
                             </v-card>
                           </v-dialog>
+                          <v-row justify="center">
+                            <v-dialog
+                              v-model="dialogDelete"
+                              max-width="400"
+                            >
+                              <v-card max-width="400">
+                                <v-card-title class="headline">确定要删除这个咨询问题吗？😊</v-card-title>
+                                <v-card-actions>
+                                  <v-container fluid>
+                                    <v-row
+                                     class="ml-0 mr-0 justify-space-around"
+                                    >
+                                      <v-btn
+                                        color="info darken-1"
+                                        @click="dialogDelete = false"
+                                        width="45%"
+                                        class="font-weight-bold"
+                                      >
+                                        取消
+                                      </v-btn>
+                                      <v-spacer></v-spacer>
+                                      <v-btn
+                                        color="red darken-1"
+                                        class="white--text font-weight-bold"
+                                        @click="deleteQuestion(item)"
+                                        width="45%"
+                                      >
+                                        删除
+                                      </v-btn>
+                                    </v-row>
+                                  </v-container>
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
+                          </v-row>
                         </template>
 
                         <v-card>
@@ -273,23 +315,13 @@
                 <v-pagination v-model="page" :length="totalPage" :total-visible="7"></v-pagination>
               </div>
             </v-card>
-          </v-expand-transition>
-          <v-expand-transition>
-            <v-card
-              v-if="tabSlideItem === '我的已答咨询'"
-              width="100%"
-              min-height="500"
-              elevation="8"
-              transition="scroll-y-transition"
-            >asdasdasdad</v-card>
-          </v-expand-transition>
+          </v-expand-transition>>
           <v-expand-transition>
             <v-card
               v-if="tabSlideItem === '胁迫情报上传'"
               width="100%"
               min-height="500"
               elevation="8"
-              transition="scroll-y-transition"
               class="px-6 pt-2 py-sm-2"
             >
               <v-row>
@@ -321,7 +353,7 @@
                 </template>
               </v-file-input>
               <v-file-input
-                v-model="duressFormData.videoFiles"
+                v-model="duressFormData.videoFile"
                 color="info accent-4"
                 counter
                 label="视频"
@@ -357,12 +389,7 @@ export default {
   data: () => ({
     items: [
       { text: '我的问题咨询', icon: 'mdi-folder' },
-      { text: '我的已答咨询', icon: 'mdi-account-multiple' },
-      { text: '我上传的胁迫', icon: 'mdi-upload' },
-      { text: '胁迫情报上传', icon: 'mdi-cloud-upload' },
-      { text: '我的最近上传', icon: 'mdi-history' },
-      { text: 'Starred', icon: 'mdi-star' },
-      { text: 'Offline', icon: 'mdi-check-circle' }
+      { text: '胁迫情报上传', icon: 'mdi-cloud-upload' }
     ],
     formData: {
       userid: null,
@@ -409,6 +436,7 @@ export default {
     carouselImages: [],
     dialog: false,
     dialogPlus: false,
+    dialogDelete: false,
     fab: false,
     submitLoadingBtn: false
   }),
@@ -438,7 +466,14 @@ export default {
                 showClose: true
               })
             }, 500)
+            this.getOrdinarySelect(this.page, this.pageSize)
           }
+        })
+        .then(res => {
+          // 关闭咨询修改模态框
+          setTimeout(() => {
+            this.dialog = false
+          }, 1000)
         })
     }
   },
@@ -461,8 +496,11 @@ export default {
         page,
         pageSize
       ).then(res => {
-        this.pageInfoList = res.pageInfo.list
-        this.totalPage = parseInt(res.pageInfo.total / this.pageSize)
+        if (res.code === 200) {
+          this.pageInfoList = res.pageInfo.list
+          //  parseInt(res.pageInfo.total / this.pageSize)
+          this.totalPage = (res.pageInfo.endRow - res.pageInfo.startRow) + 1
+        }
       })
     },
     toggleTab (item) {
@@ -474,8 +512,8 @@ export default {
         '胁迫情报上传': () => {
           console.log('我是胁迫情报上传')
         },
-        '我的已答咨询': () => {
-          console.log('我是我的已答咨询')
+        '我上传的胁迫': () => {
+          console.log('我是我上传的胁迫')
         }
       }
       funObj[this.tabSlideItem]()
@@ -517,12 +555,14 @@ export default {
       this.dialogPlus = true
     },
     addQuestionAPI () {
+      if (!this.$untils.ifEmety(this.newQuestionData)) return
       let formData = new FormData()
       formData.append('title', this.newQuestionData.title)
       formData.append('domain', this.newQuestionData.domain)
       formData.append('content', this.newQuestionData.content)
-      formData.append('file1', this.newQuestionData.imageFile)
-      console.log(this.newQuestionData.imageFile)
+      for (let key in this.newQuestionData.imageFile) {
+        formData.append('file1', this.newQuestionData.imageFile[key], key)
+      }
       this.$api.ordinary.addQuestion(formData)
         .then(res => {
           if (res.code === 200) {
@@ -535,6 +575,7 @@ export default {
                 showClose: true
               })
             }, 500)
+            this.getOrdinarySelect(this.page, this.pageSize)
           }
         })
         .then(res => {
@@ -560,12 +601,14 @@ export default {
           }
         })
         .then(res => {
+          // 关闭咨询修改模态框
           setTimeout(() => {
             this.dialog = false
           }, 1000)
         })
     },
     deleteQuestion (item) {
+      this.dialogDelete = false
       this.$api.ordinary.deleteQuestion(
         item.questID
       )
@@ -585,10 +628,29 @@ export default {
         })
     },
     uploadDuress () {
-      // 暂时不做
-      this.$api.ordinary.uploadDuress()
+      let formData = new FormData()
+      formData.append('title', this.duressFormData.title)
+      formData.append('location', this.duressFormData.location)
+      formData.append('content', this.duressFormData.content)
+      for (let key in this.duressFormData.imageFile) {
+        formData.append('image', this.duressFormData.imageFile[key], key)
+      }
+      for (let key in this.duressFormData.videoFile) {
+        formData.append('video', this.duressFormData.videoFile[key], key)
+      }
+      this.$api.ordinary.uploadDuress(formData)
         .then(res => {
-          console.log(res)
+          if (res.code === 200) {
+            setTimeout(() => {
+              this.$toast('上传成功!', {
+                x: 'right',
+                y: 'top',
+                icon: 'info',
+                dismissable: false,
+                showClose: true
+              })
+            }, 500)
+          }
         })
     }
   }
@@ -603,5 +665,11 @@ export default {
 
   #create .v-btn--floating {
     position: relative;
+  }
+  #create .btn-block {
+    width: 100%;
+  }
+  .svg {
+    font-size: 3rem;
   }
 </style>

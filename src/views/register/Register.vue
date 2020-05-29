@@ -1,10 +1,10 @@
 <template>
-    <v-app id="inspire" class="split-bg success theme--light">
+    <v-app id="inspire" class="split-bg success theme--light" :style="{backgroundImage: `url(${bg8})` }">
       <v-content>
         <v-container class="fill-height" fluid>
           <v-layout class="align-center justify-center">
             <v-flex xs12 sm8 md4 lg4 class="mb-10">
-              <v-card class="elevation-12" pa-3>
+              <v-card class="elevation-12" pa-3 :img="bg8">
                 <div class="layout column align-center">
                   <img
                     :src="require('@/assets/images/logo.png')"
@@ -12,7 +12,7 @@
                     width="100"
                     height="100"
                   />
-                  <h1 class="flex mt-n6 mb-4 success--text">账号注册</h1>
+                  <h1 class="flex mt-n1 mb-4 success--text">账号注册</h1>
                 </div>
                 <v-stepper v-model="e1" :alt-labels="altLabels">
                   <v-stepper-header>
@@ -211,6 +211,7 @@ import { phoneRex, usernameRex, passwordstrongRex, emailRex, nameRex } from '@/c
 import * as types from '@/store/global/mutation-types'
 import { mapMutations } from 'vuex'
 import Distpicker from '@/components/common/Distpicker.vue'
+import bg8 from '@/assets/images/bg8.jpg'
 
 export default {
   name: 'Register',
@@ -267,7 +268,8 @@ export default {
       loading4: false,
       loadingText: '验证手机号',
       classStyle: 'mt-3 px-10 white--text float-right',
-      color: 'success'
+      color: 'success',
+      bg8: bg8
     }
   },
   components: {

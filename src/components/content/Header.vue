@@ -10,6 +10,7 @@
        :absolute="absolute"
        :elevate-on-scroll="false"
        :elevation="elevation"
+       :class="headerBg"
        >
         <div class="flex-grow-1"></div>
         <v-toolbar-title :class="classObject" class="title" :style="{cursor: 'pointer'}">
@@ -17,7 +18,7 @@
         </v-toolbar-title>
         <div class="flex-grow-1"></div>
         <v-toolbar-items v-for="title in titles" :key="title">
-          <v-btn text :class="classObject" @click="routerLink(title)">{{ title }}</v-btn>
+          <v-btn text :class="classObject" @click="routerLink(title)" class="subtitle-1 font-weight-bold">{{ title }}</v-btn>
         </v-toolbar-items>
         <div class="flex-grow-1"></div>
         <v-row v-if="!userInfo">
@@ -65,14 +66,13 @@
 <script>
 import * as types from '@/store/global/mutation-types'
 import { mapGetters, mapMutations } from 'vuex'
-import { imageUrl } from '@/common/const.js'
 export default {
   name: 'Header',
   props: ['absolute'],
   data: () => ({
     phone: 12345679,
     src: null,
-    titles: ['国际', '国内', '病害', '虫害', '植保知识', '产品', '咨询'],
+    titles: ['病害', '虫害', '植保知识', '产品', '咨询', '资讯', '联系我们'],
     color: null,
     isActive: false,
     elevation: 0,
@@ -89,7 +89,8 @@ export default {
         title: '账号退出',
         icon: 'power_settings_new'
       }
-    ]
+    ],
+    state: null
   }),
   computed: {
     ...mapGetters({
@@ -97,13 +98,18 @@ export default {
     }),
     classObject () {
       return {
-        'text-color-white': !this.isActive
+        'text-color-white': true
+      }
+    },
+    headerBg () {
+      return {
+        'bg-color': this.isActive
       }
     },
     classBg () {
       return {
-        black: this.isActive,
-        accent: !this.isActive
+        black: !this.isActive,
+        accent: this.isActive
       }
     }
   },
@@ -111,7 +117,15 @@ export default {
     // 如果，state 中的 userInfo 没有数据（用户没有登录）更改 view
     if (this.userInfo) {
       this.phone = this.userInfo.phone
-      this.src = process.env.NODE_ENV === 'development' ? this.userInfo.photo : `${imageUrl}/${this.userInfo.photo}`
+      this.src = this.userInfo.photo
+    }
+  },
+  watch: {
+    userInfo: function () {
+      if (this.userInfo) {
+        this.phone = this.userInfo.phone
+        this.src = this.userInfo.photo
+      }
     }
   },
   mounted () {
@@ -152,12 +166,15 @@ export default {
       this.$router.push('/userInfo')
     },
     setQuestion () {
-      this.$router.push('userQuestion')
+      this.$router.push('/userQuestion')
+    },
+    setExpertQuestion () {
+      this.$router.push('/expertQuestion')
     },
     handleScroll () {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       this.isActive = scrollTop > 0
-      this.color = scrollTop > 0 ? 'white' : null
+      this.color = scrollTop > 0 ? 'black' : null
       this.elevation = scrollTop > 0 ? 6 : 0
     },
     handleClick (title) {
@@ -166,7 +183,11 @@ export default {
           this.setUserInfo()
         },
         '个人咨询': () => {
-          this.setQuestion()
+          if (this.userInfo.state - 0 === 2) {
+            this.setQuestion()
+          } else if (this.userInfo.state - 0 === 1) {
+            this.setExpertQuestion()
+          }
         },
         '账号退出': () => {
           this.loginout()
@@ -176,10 +197,13 @@ export default {
     },
     routerLink (title) {
       // 待补充
-      if (title === '咨询') {
+      if (title === '资讯' || title === '咨询') {
         const funObj = {
           '咨询': () => {
             this.$router.push('/question')
+          },
+          '资讯': () => {
+            this.$router.push('/message')
           }
         }
         funObj[title]()
@@ -199,4 +223,6 @@ export default {
     border-radius 2px
   .text-color-white
     color #fff !important
+  .bg-color
+    background-image linear-gradient(45deg, #93a5cf 0%, #e4efe9 100%)
 </style>

@@ -41,21 +41,21 @@
                                       <v-text-field
                                         class="purple-input"
                                         label="姓名"
-                                        :value="formData.name"
+                                        v-model="formData.name"
                                       />
                                     </v-col>
                                     <v-col cols="12" md="6">
                                       <v-text-field
                                         label="用户名"
                                         class="purple-input"
-                                        :value="formData.nickname"
+                                        v-model="formData.nickname"
                                       />
                                     </v-col>
                                     <v-col cols="12" md="12">
                                       <v-text-field
                                         label="邮箱"
                                         class="purple-input"
-                                        :value="formData.email"
+                                        v-model="formData.email"
                                       />
                                     </v-col>
                                     <v-col cols="12" md="12">
@@ -63,14 +63,14 @@
                                         class="purple-input"
                                         label="邮政编码"
                                         type="number"
-                                        :value="formData.postcode"
+                                        v-model="formData.postcode"
                                       />
                                     </v-col>
                                     <v-col cols="12">
                                       <v-textarea
                                         class="purple-input"
                                         label="个人介绍"
-                                        :value="formData.introduction"
+                                        v-model="formData.introduction"
                                       />
                                     </v-col>
                                     <v-col cols="12" class="text-right">
@@ -97,7 +97,7 @@
                                     v-on="on"
                                   >
                                     <img
-                                      src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+                                      :src="formData.photo"
                                     />
                                   </v-avatar>
                                 </template>
@@ -377,7 +377,8 @@
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
 import MaterialCard from '@/components/common/MaterialCard.vue'
-import { mapGetters } from 'vuex'
+import * as types from '@/store/global/mutation-types'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'UserInfo',
@@ -464,6 +465,10 @@ export default {
     MaterialCard
   },
   methods: {
+    ...mapMutations({
+      setUserInfoData: types.SET_USERINFO,
+      removeUserInfoData: types.REMOVE_USERINFO
+    }),
     updateAvatarData (e) {
       this.avatarImg = e.target.files[0]
       this.uploadBtnText = this.avatarImg.name
@@ -520,6 +525,12 @@ export default {
               }
             )
             this.formData = obj
+            // 清除vuex本地中用户信息
+            this.removeUserInfoData()
+            // 清除localStorage
+            localStorage.removeItem('userInfo')
+            // 添加localStorage
+            this.setUserInfoData(this.formData)
           }
         })
     },

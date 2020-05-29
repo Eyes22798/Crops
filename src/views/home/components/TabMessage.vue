@@ -38,33 +38,37 @@
             v-for="(item, index) in tabDatas"
             :key="index"
             @change="getKeyword(item)"
-          >{{ item.name }}</v-tab>
+          >{{ item }}</v-tab>
         </v-tabs>
       </v-toolbar>
 
       <v-tabs-items v-model="tabs">
-        <v-tab-item v-for="(tabData, index) in tabDatas" :key="index">
+        <v-tab-item v-for="(tabData, index) in hotQuestionData" :key="index">
           <v-card>
             <v-hover v-slot:default="{ hover }">
-              <v-carousel :show-arrows="false" height="300" hide-delimiter-background>
+              <v-carousel :show-arrows="false" height="350" hide-delimiter-background>
                 <v-carousel-item
-                  v-for="(carouselItem, i) in tabData.data"
+                  v-for="(carouselItem, i) in tabData.messageImage"
                   :key="i"
-                  :src="carouselItem.webpage"
+                  :src="carouselItem"
                 >
                   <v-expand-transition>
                     <div
                       v-if="hover"
                       class="d-flex transition-fast-in-fast-out grey v-card--reveal white--text text-justify title"
                       style="height: 100%; width: 100%;"
-                    >&nbsp;&nbsp;&nbsp;&nbsp;{{ carouselItem.title }}</div>
+                    >
+                      <v-row class="ml-0 mr-0  d-flex justify-center content">
+                        <div class="subtitle-1 font-weight-bold d-inline-block white--text">点击右边按钮查看原文热点资讯</div>
+                        <v-btn color="accent" dark class="d-inline-block" :href="tabData.webpage" icon>
+                          <v-icon>send</v-icon>
+                        </v-btn>
+                      </v-row>
+                    </div>
                   </v-expand-transition>
                 </v-carousel-item>
               </v-carousel>
             </v-hover>
-            <div class="text-center">
-              <v-pagination v-model="pageNum" :length="pageCount" class="mt-2" circle color="black"></v-pagination>
-            </div>
           </v-card>
         </v-tab-item>
       </v-tabs-items>
@@ -73,6 +77,8 @@
 </template>
 
 <script>
+import * as types from '@/store/global/mutation-types'
+import { mapMutations } from 'vuex'
 export default {
   name: 'TabMessage',
   data () {
@@ -80,48 +86,11 @@ export default {
       keyword: '',
       pageNum: 1,
       pageSize: 3,
-      pageCount: 6,
+      pageCount: null,
       tabs: null,
       show: false,
-      tabDatas: [
-        {
-          name: '水稻',
-          data: null
-        },
-        {
-          name: '冬小麦',
-          data: null
-        },
-        {
-          name: '小叶瓶尔小草',
-          data: null
-        },
-        {
-          name: '狭叶方竹',
-          data: null
-        },
-        {
-          name: '朴树',
-          data: null
-        },
-        {
-          name: '岩栎',
-          data: null
-        },
-        {
-          name: '醉香含笑',
-          data: null
-        },
-        {
-          name: '牡丹',
-          data: null
-        },
-        {
-          name: '邹叶狗尾草',
-          data: null
-        }
-      ],
-      questionData: {},
+      tabDatas: [],
+      hotQuestionData: {},
       searchText: '',
       value: '',
       custom: true
@@ -136,70 +105,55 @@ export default {
     }
   },
   mounted () {
-    this.keyword = '水稻'
-  },
-  watch: {
-    keyword () {
-      this.setQuestionInfoData()
-    },
-    pageNum () {
-      this.setQuestionInfoData()
-    }
+    this.getHotMessage()
   },
   methods: {
+    ...mapMutations({
+      setSearchText: types.SET_SEARCHTEXT
+    }),
     getKeyword (item) {
-      this.keyword = item.name
+      // 带扩展提示
+      console.log('getKeyWord', item, this.keyword)
     },
-    async getQuestionInfo (keyword, pageNum, pageSize) {
-      await this.$api.common
-        .getQuestionInfo(
-          keyword,
-          pageNum,
-          pageSize
-        )
+    async getHotMessage (keyword, pageNum, pageSize) {
+      await this.$api.common.getHotMessage()
         .then(res => {
           if (res.code === 200) {
-            this.pageCount = parseInt(res.data.number / this.pageSize)
-            this.questionData = res.data.list
+            this.hotQuestionData = res.list
+            this.keyword = res.list[0].keyword
+            res.list.forEach(item => {
+              this.tabDatas.push(item.keyword)
+            })
           }
         })
     },
     setQuestionInfoData () {
-      this.getQuestionInfo(this.keyword, this.pageNum, this.pageSize).then(res => {
-        this.tabDatas.some(item => {
-          if (item['name'] === this.keyword) {
-            item['data'] = this.questionData
-            return true
-          }
-        })
-      })
+      this.getQuestionInfo(this.keyword, this.pageNum, this.pageSize)
     },
     changeTooltip () {
       this.show = !this.show
     },
     changeKeyword () {
       if (this.searchText) {
-        // 定义一个新的 tabData 保存用户搜索的新数据
-        const tabData = {}
-        // 创建一个 Promise 对象判断是否有重复的数据
+        console.log(this.searchText)
+        this.setSearchText(this.searchText)
+        // 创建一个 Promise 对象判断是否将 searchText 传到其他组件中
         const promise = new Promise((resolve, reject) => {
+          resolve(this.searchText)
+          this.setSearchText(this.searchText)
           // 打开 progress 动画
           this.custom = false
-          this.tabDatas[0].name !== this.searchText ? resolve(this.searchText) : reject(this.tabDatas[0].name)
         })
+
         promise.then(res => {
-          // 初始化数据
-          tabData.name = res
-          tabData.data = null
-          // 添加新数据
-          this.tabDatas.unshift(tabData)
-          // 发起请求获得数据并渲染到 view 中
-          this.keyword = res
         }).then(res => {
           setTimeout(() => {
             this.custom = true
+            // 跳转页面
+            this.$router.push('/message')
           }, 1000)
         }).catch(error => {
+          console.log(error)
           this.custom = true
         })
       }
@@ -210,10 +164,24 @@ export default {
 
 <style lang="stylus" scoped>
   .v-card--reveal
+    z-index 1
+    background-position center top
+    background-size cover
     align-items center
     bottom 0
     justify-content center
     opacity .6
     position absolute
     width 100%
+    box-shadow 0 10px 20px rgba(0,0,0,0.5)
+    overflow hidden
+    box-sizing: border-box
+  .v-card--reveal::before
+    content ''
+    background inherit
+    background-attachment fixed
+    filter blur(4px)
+  .v-card--reveal::after
+    content ""
+    background rgba(0, 0, 0, 0.25)
 </style>

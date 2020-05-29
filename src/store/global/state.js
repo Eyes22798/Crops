@@ -18,6 +18,8 @@ const diseaseName = null
 const pestDiseaseName = null
 // 图像识别得到的名字
 const imageName = null
+// 保存首页热点推送搜索文字
+const searchText = null
 
 export default {
   namePassword,
@@ -27,5 +29,6 @@ export default {
   category,
   diseaseName,
   pestDiseaseName,
-  imageName
+  imageName,
+  searchText
 }

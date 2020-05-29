@@ -37,5 +37,8 @@ export default {
   },
   removeImageName ({ commit }, param) {
     commit(types.REMOVE_IMAGENAME, param)
+  },
+  setSearchText ({ commit }, param) {
+    commit(types.SET_SEARCHTEXT, param)
   }
 }

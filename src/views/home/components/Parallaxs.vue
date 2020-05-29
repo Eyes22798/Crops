@@ -5,7 +5,7 @@
         <v-window-item v-for="item in parallaxItems" :key="item.id">
           <v-parallax :src="item.src" height="500">
             <v-row
-              class="fill-height title"
+              class="fill-height title white--text"
               align="center"
               justify="center"
             >{{ item.title }}</v-row>
@@ -45,12 +45,12 @@ export default {
         },
         {
           id: 1,
-          src: require('@/assets/images/bg4.jpg'),
+          src: require('@/assets/images/bg10.png'),
           title: 'Crops 旨在通过使农作物诊断更加准确，无误选择化学药品以及通过个性化说明辅助应用程序来改善有害生物管理决策。'
         },
         {
           id: 2,
-          src: require('@/assets/images/bg.jpg'),
+          src: require('@/assets/images/bg11.png'),
           title: '通过评估用户通过智能问卷输入的农作物的详细信息（类型，位置，土壤，历史等）和威胁特征（类型，外观，进展等），该应用程序会建议最可能的诊断方法'
         }
       ],

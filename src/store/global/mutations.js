@@ -84,6 +84,13 @@ const mutations = {
     } catch (err) {
       console.log(`清除图像识别出的name失败，${err}`)
     }
+  },
+  [types.SET_SEARCHTEXT] (state, data) {
+    try {
+      state.searchText = data
+    } catch (err) {
+      console.log(`保存首页热点推送搜索文字失败，${err}`)
+    }
   }
 }
 

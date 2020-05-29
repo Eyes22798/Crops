@@ -250,6 +250,34 @@ const common = {
       },
       data: formData
     })
+  },
+  // 获取热点资讯
+  getHotMessage () {
+    return $axios({
+      url: `common/count/hotMessage`,
+      method: 'get'
+    })
+  },
+  // 获取热点资讯访问值
+  getCountMessage (messageID) {
+    return $axios({
+      url: `common/count/countMessage?messageID=${messageID}`,
+      method: 'get'
+    })
+  },
+  // 获取热点植保知识
+  getHotProtected () {
+    return $axios({
+      url: `common/count/hotProtected`,
+      method: 'get'
+    })
+  },
+  // 统计热点植保信息Get
+  getCountProtect (protectID) {
+    return $axios({
+      url: `common/count/countProtect?protectID=${protectID}`,
+      method: 'get'
+    })
   }
 }
 

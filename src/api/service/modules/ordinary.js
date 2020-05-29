@@ -79,6 +79,13 @@ const ordinary = {
       url: `/ordinary/solr?name=${name}&start=${start}&row=${row}`,
       method: 'get'
     })
+  },
+  // 查询所有咨询数量
+  getQuestCount () {
+    return $axios({
+      url: `/ordinary/quest/selectCount`,
+      method: 'get'
+    })
   }
 }
 

@@ -9,6 +9,15 @@ const ORDINARY_ROUTER = [
     component: () => import(/* webpackChunkName: "UserQuestion" */ '@/views/user/UserQuestion/UserQuestion.vue')
   },
   {
+    path: '/expertQuestion',
+    name: 'ExpertQuestion',
+    meta: {
+      title: '我的咨询',
+      requireAuth: true
+    },
+    component: () => import(/* webpackChunkName: "ExpertQuestion" */ '@/views/user/ExpertQuestion/ExpertQuestion.vue')
+  },
+  {
     path: '/question',
     name: 'Question',
     meta: {

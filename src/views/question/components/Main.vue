@@ -11,7 +11,7 @@
         <v-col cols="12" sm="6" md="6">
           <material-card color="#1867C0" title="咨询总数" icon="insert_chart_outlined">
             <v-icon left>mdi-label</v-icon>
-            <span class="title font-weight-bold">121321</span>
+            <span class="title font-weight-bold">{{ questCount }}</span>
           </material-card>
         </v-col>
       </v-row>
@@ -71,7 +71,8 @@ export default {
       totalPage: null,
       questionContent: '',
       pageInfoList: {},
-      carouselImages: []
+      carouselImages: [],
+      questCount: 123
     }
   },
   watch: {
@@ -81,6 +82,7 @@ export default {
   },
   mounted () {
     this.getOrdinarySelectAll(this.page, this.pageSize)
+    this.getQuestCount()
   },
   methods: {
     getOrdinarySelectAll (page, pageSize) {
@@ -91,7 +93,16 @@ export default {
         .then(res => {
           if (res.code === 200) {
             this.pageInfoList = res.pageInfo.list
-            this.totalPage = parseInt(res.pageInfo.total / this.pageSize)
+            // this.totalPage = parseInt(res.pageInfo.total / this.pageSize)
+            this.totalPage = (res.pageInfo.endRow - res.pageInfo.startRow) + 1
+          }
+        })
+    },
+    getQuestCount () {
+      this.$api.ordinary.getQuestCount()
+        .then(res => {
+          if (res.code === 200) {
+            this.questCount = res.data - 0
           }
         })
     }

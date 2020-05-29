@@ -1,10 +1,10 @@
 <template>
-  <v-app id="inspire" class="split-bg success theme--light">
+  <v-app id="inspire" class="split-bg success theme--light" :style="{backgroundImage: `url(${bg8})` }">
     <v-content>
       <v-container class="fill-height" fluid>
         <v-layout class="align-center justify-center">
           <v-flex xs12 sm8 md4 lg4>
-            <v-card class="elevation-12" pa-3>
+            <v-card class="elevation-12" pa-3 :img="bg8">
               <v-card-text>
                 <div class="layout column align-center">
                   <img
@@ -13,7 +13,6 @@
                     width="120"
                     height="120"
                   />
-                  <h1 class="flex mt-n6 mb-6 success--text">广学坚守，勤思敏行</h1>
                 </div>
                 <v-form v-if="!toggleTag">
                   <v-text-field
@@ -138,6 +137,7 @@ import LoadingBtn from '@/components/common/LoadingBtn'
 import * as types from '@/store/global/mutation-types'
 import { phoneRex } from '@/common/const.js'
 import { mapMutations, mapGetters } from 'vuex'
+import bg8 from '@/assets/images/bg8.jpg'
 
 export default {
   name: 'Login',
@@ -177,7 +177,8 @@ export default {
           }
         ]
       },
-      classStyle: 'mt-3 px-10 white--text float-right'
+      classStyle: 'mt-3 px-10 white--text float-right',
+      bg8: bg8
     }
   },
   computed: {

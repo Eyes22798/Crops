@@ -14,7 +14,7 @@
 import Header from '@/components/content/Header.vue'
 import Footer from '@/components/content/Footer.vue'
 import Parallax from '../components/Parallax'
-import Main from './components/Main.vue'
+import Main from '../components/Info-card-enemy'
 
 export default {
   name: 'Enemy',

@@ -1,215 +1,110 @@
 <template>
-  <v-app>
+  <v-app id="info-card">
     <v-layout>
       <v-flex>
         <v-container>
           <v-row class="mt-n2">
-            <v-col v-show="showCols" cols="12" md="4" v-for="item in listObj" :key="item.enemyid">
+            <v-col v-show="showCols" cols="12" md="4" v-for="item in listObj" :key="item.plantid">
               <v-card min-width="300">
-                <v-dialog v-model="dialog" width="500">
+                <v-dialog v-model="dialog" max-width="600" class="info-dialog">
                   <template v-slot:activator="{ on }">
                     <material-card
-                      color="red light"
-                      title="天敌信息"
+                      color="success"
+                      title="作物信息"
                       icon="featured_play_list"
-                      @click="getEnemyInfoById(item.enemyid)"
+                      @click="getPlantById(item.plantid)"
                       v-on="on"
                     >
                       <v-icon left>mdi-label</v-icon>点击查看详细信息
                     </material-card>
                   </template>
-
                   <v-card>
                     <v-card-title
                       class="headline grey lighten-2"
                       primary-title
-                    >{{ list.chinesename }}</v-card-title>
-
-                    <v-row justify="center">
-                      <v-col cols="12">
-                        <v-card elevation="24">
-                          <v-system-bar lights-out></v-system-bar>
-                          <v-carousel
-                            :continuous="false"
-                            cycle
-                            :show-arrows="false"
-                            hide-delimiter-background
-                            delimiter-icon="mdi-minus"
-                            height="300"
-                          >
-                            <v-carousel-item v-for="(slide, i) in imageFile" :key="i">
-                              <v-parallax :src="slide.imagefile">
-                                <v-row class="fill-height" align="center" justify="center">
-                                  <div class="display-3 mt-n12">{{ slide.name }}</div>
-                                </v-row>
-                              </v-parallax>
-                            </v-carousel-item>
-                          </v-carousel>
-                        </v-card>
-                      </v-col>
+                    >详细信息</v-card-title>
+                    <v-row class="justify-center align-center text-center">
+                      <material-card color="info" class="mx-2" width="100%" icon="spa" iconText="中文学名">
+                        <v-chip outlined label>
+                          <v-icon left>local_florist</v-icon>
+                          {{ list.chinesename }}
+                        </v-chip>
+                      </material-card>
+                    </v-row>
+                    <v-row class="justify-center align-center text-center">
+                      <material-card color="info" class="mx-2" width="100%" icon="public" iconText="拉丁学名">
+                        <v-chip outlined label>
+                          <v-icon left>local_florist</v-icon>
+                          {{ list.latinname }}
+                        </v-chip>
+                      </material-card>
+                    </v-row>
+                    <v-row class="justify-center align-center text-center">
+                      <material-card color="info" class="mx-2" width="100%" icon="whatshot" iconText="别称">
+                        <v-chip outlined label>
+                          <v-icon left>local_florist</v-icon>
+                          {{ list.alias }}
+                        </v-chip>
+                      </material-card>
                     </v-row>
                     <v-card-text>
                       <strong class="title font-weight-bold">科属关系</strong>
                     </v-card-text>
                     <v-card-text class="py-0">
                       <v-timeline align-top dense>
-                        <v-timeline-item color="red" small icon="star">
-                          <v-row class="pt-1">
+                        <v-timeline-item
+                         small
+                         icon="star"
+                         v-for="(key, index) in biologycategory"
+                         :key="index"
+                        >
+                          <v-row>
                             <v-col cols="4">
-                              <strong>{{ biologycategory.kingdom }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关界的描述</strong>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="orange" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.phylum }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关门的描述</strong>
-                              <div class="caption mb-2">Hangouts</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="blue" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory._class }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关纲的描述</strong>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="green" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.bioOrder }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关目的描述</strong>
-                              <div class="caption">Web App</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="yellow" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.family }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关科的描述</strong>
-                              <div class="caption">Web App</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="teal" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.genus }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关属的描述</strong>
-                              <div class="caption">Web App</div>
-                            </v-col>
-                          </v-row>
-                        </v-timeline-item>
-
-                        <v-timeline-item color="purple" small icon="star">
-                          <v-row class="pt-1">
-                            <v-col cols="4">
-                              <strong>{{ biologycategory.species }}</strong>
-                            </v-col>
-                            <v-col>
-                              <strong>有关种的表述</strong>
-                              <div class="caption">{{ item.growthhabit }}</div>
+                              <p v-if="index === 'bioid'">物种id</p>
+                              <strong>{{ biologycategory[index] }}</strong>
                             </v-col>
                           </v-row>
                         </v-timeline-item>
                       </v-timeline>
                     </v-card-text>
                     <v-divider></v-divider>
-
+                    <v-card-text class="mt-2">
+                      <v-chip color="success" label class="info-chip"><v-icon left>mdi-label</v-icon>分布</v-chip>
+                      <v-spacer></v-spacer>
+                      {{ list.distribution }}
+                      <v-spacer></v-spacer>
+                      <v-chip color="success" label class="info-chip"><v-icon left>mdi-label</v-icon>描述</v-chip>
+                      <v-spacer></v-spacer>
+                      {{ list.morphology }}
+                      <v-spacer></v-spacer>
+                      <v-chip color="success" label class="info-chip"><v-icon left>mdi-label</v-icon>特征</v-chip>
+                      <v-spacer></v-spacer>
+                      {{ list.growthhabit }}
+                    </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn color="primary" text @click="dialog = false">关闭</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-                <v-row class="justify-center align-center">
-                  <material-card color="info" class="mx-2 mt-n2" icon="spa" iconText="中文学名">
-                    <v-chip outlined label>
-                      <v-icon left>local_florist</v-icon>
-                      {{ item.chinesename }}
-                    </v-chip>
-                  </material-card>
-                  <material-card color="info" class="mx-2 mt-n2" icon="public" iconText="拉丁学名">
-                    <v-chip outlined label>
-                      <v-icon left>local_florist</v-icon>
-                      {{ item.latinname }}
-                    </v-chip>
-                  </material-card>
-                  <material-card color="info" class="mx-2 mt-n2" icon="whatshot" iconText="别名">
-                    <v-chip outlined label>
-                      <v-icon left>local_florist</v-icon>
-                      {{ item.alias }}
-                    </v-chip>
-                  </material-card>
-                </v-row>
-
-                <v-card-actions>
-                  <v-chip color="success">分布</v-chip>
-                  <v-spacer></v-spacer>
-                  <v-btn icon @click="item.show = !item.show">
-                    <v-icon>{{ item.show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                  </v-btn>
-                </v-card-actions>
-                <v-expand-transition>
-                  <div v-show="item.show">
-                    <v-divider></v-divider>
-                    <v-card-text class="text-justify">{{ item.distribution }}</v-card-text>
-                  </div>
-                </v-expand-transition>
-
-                <v-card-actions>
-                  <v-btn icon @click="item.show = !item.show">
-                    <v-icon>{{ item.show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                  </v-btn>
-                  <v-spacer></v-spacer>
-                  <v-chip color="brown darken-3" text-color="white">描述</v-chip>
-                </v-card-actions>
-                <v-expand-transition>
-                  <div v-show="item.show">
-                    <v-divider></v-divider>
-                    <v-card-text class="text-justify">{{ item.morphology }}</v-card-text>
-                  </div>
-                </v-expand-transition>
-
-                <v-card-actions>
-                  <v-chip color="red accent-2" text-color="white">特征</v-chip>
-                  <v-spacer></v-spacer>
-                  <v-btn icon @click="item.show = !item.show">
-                    <v-icon>{{ item.show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                  </v-btn>
-                </v-card-actions>
-                <v-expand-transition>
-                  <div v-show="item.show">
-                    <v-divider></v-divider>
-                    <v-card-text class="text-justify">{{ item.growthhabit }}</v-card-text>
-                  </div>
-                </v-expand-transition>
+                <v-card min-width="300">
+                  <v-carousel
+                    :continuous="false"
+                    cycle
+                    :show-arrows="false"
+                    hide-delimiter-background
+                    delimiter-icon="mdi-minus"
+                    height="300"
+                  >
+                    <v-carousel-item v-for="(key, value) in item.plantimage" :key="value">
+                      <v-img :src="key"></v-img>
+                    </v-carousel-item>
+                  </v-carousel>
+                </v-card>
               </v-card>
             </v-col>
-            <v-col v-show="!showCols"  cols="12" md="4" v-for="item in imageListObj" :key="item.ID">
-              <v-card min-width="300">
+            <v-col v-show="!showCols" cols="12" md="4" v-for="item in imageListObj" :key="item.ID">
+              <v-card>
                 <v-dialog v-model="dialog2" width="500">
                   <template v-slot:activator="{ on }">
                     <material-card
@@ -242,8 +137,7 @@
                             height="300"
                           >
                             <v-carousel-item v-for="(slide, i) in item.image_imageFile" :key="i">
-                              <v-parallax :src="slide">
-                              </v-parallax>
+                              <v-parallax :src="slide"></v-parallax>
                             </v-carousel-item>
                           </v-carousel>
                         </v-card>
@@ -410,6 +304,7 @@
               </v-card>
             </v-col>
           </v-row>
+          <!-- 分页组件 -->
           <div class="text-center">
             <v-container>
               <v-row justify="center">
@@ -439,7 +334,7 @@ export default {
     show: false,
     dialog: false,
     list: {
-      enemyid: null,
+      plantid: null,
       chinesename: null,
       latinname: null,
       alias: null,
@@ -469,7 +364,7 @@ export default {
       '属'
     ],
     imageFile: null,
-    name: '蝗虫',
+    name: '玫瑰',
     page: 1,
     pageSize: 3,
     number: null,
@@ -482,39 +377,39 @@ export default {
   }),
   computed: {
     ...mapGetters([
-      'imageName',
       'pageName',
-      'category'
+      'category',
+      'imageName'
     ])
   },
   mounted () {
-    this.getEnemyByName(this.name, this.page, this.pageSize)
+    this.getPlantByName(this.name, this.page, this.pageSize)
   },
   watch: {
     page () {
       if (this.imageTag) {
-        this.getImageDataBySolr(this.imageName, this.page, this.pageSize)
+        this.getImageDataBySolr(this.imageName, this.page - 1, this.pageSize)
         this.imageTag = false
         return
       }
       if (this.tag) {
         this.category['pagenum'] = this.page
         this.category['pagesize'] = this.pageSize
-        this.getEnemyByCategory(this.category)
+        this.getPlantByCategrory(this.category)
       } else {
         const name = this.pageName ? this.pageName : this.name
-        this.getEnemyByName(name, this.page, this.pageSize)
+        this.getPlantByName(name, this.page, this.pageSize)
       }
     },
     pageName () {
-      this.getEnemyByName(this.pageName, this.page = 1, this.pageSize)
+      this.getPlantByName(this.pageName, this.page = 1, this.pageSize)
       this.tag = false
       this.toast(this.pageName)
     },
     category () {
       this.category['pagenum'] = this.page
       this.category['pagesize'] = this.pageSize
-      this.getEnemyByCategory(this.category)
+      this.getPlantByCategrory(this.category)
       this.toast(this.category.species)
       this.tag = true
     },
@@ -538,11 +433,12 @@ export default {
         list[key].show = true
       })
       this.listObj = list
-      this.number = parseInt(data.number / this.pageSize)
+      // 得到分页数量
+      this.number = parseInt(data.number / data.pageNumber || 3)
     },
-    getEnemyByName (name, pageNum, pageSize) {
+    getPlantByName (name, pageNum, pageSize) {
       this.$api.common
-        .getEnemyByName(
+        .getPlantByName(
           name,
           pageNum,
           pageSize
@@ -554,9 +450,10 @@ export default {
           }
         })
     },
-    getEnemyInfoById (enemyid) {
+    getPlantById (plantId) {
+      console.log(plantId)
       this.$api.common
-        .getEnemyInfo(enemyid)
+        .getPlantInfo(plantId)
         .then(res => {
           if (res.code === 200) {
             this.list = {
@@ -565,13 +462,12 @@ export default {
             this.biologycategory = {
               ...res.data.biologycategory
             }
-            this.imageFile = res.data.list
           }
         })
     },
-    getEnemyByCategory (params) {
+    getPlantByCategrory (params) {
       this.$api.common
-        .getEnemyByCategory(params)
+        .getPlantByCategory(params)
         .then(res => {
           if (res.code === 200) {
             this.pagination(res.data)
@@ -589,9 +485,8 @@ export default {
           if (res.code === 200) {
             this.showCols = false
             this.imageTag = true
-            this.imageListObj = res.data.solrDocuments
-            console.log(res)
-            this.number = parseInt(res.data.size / 3)
+            this.imageListObj = res.solrDocuments
+            this.number = parseInt(res.num / this.pageSize || 3)
           }
         })
     },
@@ -601,3 +496,12 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+  #info-card
+    .info-dialog
+      .info-chip
+        display flex
+        justify-content center
+        width 65px
+</style>
