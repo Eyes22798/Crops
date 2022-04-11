@@ -13,7 +13,7 @@
     "core-js": "^2.6.5",
     "css-loader": "^3.5.3",
     "kind-of": "^6.0.3",
-    "minimist": "^1.2.3",
+    "minimist": "^1.2.6",
     "nprogress": "^0.2.0",
     "portfinder": "^1.0.21",
     "qs": "^6.8.0",
